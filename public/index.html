@@ -347,6 +347,7 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
       <div class="form-error" id="loginError">Nieprawidłowy email lub hasło</div>
     </div>
     <button class="btn btn-primary btn-full" onclick="handleLogin()" id="loginBtn">Zaloguj się</button>
+    <div style="text-align:center;margin-top:12px"><a onclick="closeModal('loginModal');openModal('forgotModal')" style="font-size:.85rem;color:var(--accent2);cursor:pointer">Zapomniałem hasła</a></div>
     <div class="form-switch">Nie masz konta? <a onclick="closeModal('loginModal');openModal('registerModal')">Zarejestruj się</a></div>
   </div>
 </div>
@@ -380,6 +381,46 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
   <div class="modal" style="max-width:480px">
     <button class="modal-close" onclick="closeModal('payModal')">✕</button>
     <div id="payContent"></div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('forgotModal')">✕</button>
+    <h2>Reset hasła</h2>
+    <p class="subtitle">Podaj email — wyślemy Ci link do zmiany hasła</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="forgotEmail" placeholder="twoj@email.pl">
+      <div class="form-error" id="forgotError"></div>
+    </div>
+    <div id="forgotSuccess" style="display:none;text-align:center;padding:16px 0">
+      <div style="font-size:2.4rem;margin-bottom:12px">📧</div>
+      <div style="font-weight:600;margin-bottom:6px">Email wysłany!</div>
+      <div style="font-size:.9rem;color:var(--text-dim)">Sprawdź skrzynkę (i folder spam). Kliknij link w wiadomości, żeby ustawić nowe hasło.</div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="handleForgotPassword()" id="forgotBtn">Wyślij link resetujący</button>
+    <div class="form-switch"><a onclick="closeModal('forgotModal');openModal('loginModal')">← Wróć do logowania</a></div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
+    <h2>Nowe hasło</h2>
+    <p class="subtitle">Ustaw nowe hasło do swojego konta</p>
+    <div class="form-group">
+      <label>Nowe hasło</label>
+      <input type="password" id="resetPass" placeholder="Min. 6 znaków">
+    </div>
+    <div class="form-group">
+      <label>Powtórz hasło</label>
+      <input type="password" id="resetPass2" placeholder="Min. 6 znaków">
+      <div class="form-error" id="resetError"></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="handleResetPassword()" id="resetBtn">Zmień hasło</button>
   </div>
 </div>
 
@@ -922,6 +963,93 @@ async function handleLogout() {
   renderNav();
 }
 
+// ═══════ FORGOT PASSWORD ═══════
+async function handleForgotPassword() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  const err = document.getElementById('forgotError');
+  const btn = document.getElementById('forgotBtn');
+
+  if (!email || !email.includes('@')) { err.textContent='Podaj prawidłowy email'; err.style.display='block'; return; }
+  if (!sb) { err.textContent='Serwer niedostępny'; err.style.display='block'; return; }
+
+  err.style.display = 'none';
+  setButtonLoading(btn, true);
+
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '?reset=true'
+    });
+
+    if (error) throw error;
+
+    // Pokaż sukces
+    document.getElementById('forgotSuccess').style.display = 'block';
+    btn.style.display = 'none';
+    document.querySelector('#forgotModal .form-group').style.display = 'none';
+
+  } catch (e) {
+    console.error('Forgot password error:', e);
+    err.textContent = e.message || 'Coś poszło nie tak';
+    err.style.display = 'block';
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+async function handleResetPassword() {
+  const pass = document.getElementById('resetPass').value;
+  const pass2 = document.getElementById('resetPass2').value;
+  const err = document.getElementById('resetError');
+  const btn = document.getElementById('resetBtn');
+
+  if (!pass || !pass2) { err.textContent='Wypełnij oba pola'; err.style.display='block'; return; }
+  if (pass.length < 6) { err.textContent='Hasło musi mieć min. 6 znaków'; err.style.display='block'; return; }
+  if (pass !== pass2) { err.textContent='Hasła nie są identyczne'; err.style.display='block'; return; }
+  if (!sb) { err.textContent='Serwer niedostępny'; err.style.display='block'; return; }
+
+  err.style.display = 'none';
+  setButtonLoading(btn, true);
+
+  try {
+    const { error } = await sb.auth.updateUser({ password: pass });
+    if (error) throw error;
+
+    closeModal('resetModal');
+    showToast('Hasło zmienione! Możesz się teraz zalogować 🎉');
+
+    // Clear
+    document.getElementById('resetPass').value = '';
+    document.getElementById('resetPass2').value = '';
+
+  } catch (e) {
+    console.error('Reset password error:', e);
+    err.textContent = e.message || 'Nie udało się zmienić hasła';
+    err.style.display = 'block';
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+// Sprawdź czy URL zawiera token resetu hasła
+function checkResetToken() {
+  const hash = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+
+  // Supabase dołącza token jako hash fragment
+  if (hash && hash.includes('type=recovery')) {
+    // Supabase automatycznie obsłuży sesję — otwórz modal zmiany hasła
+    setTimeout(() => openModal('resetModal'), 500);
+    // Wyczyść URL
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+
+  // Alternatywnie, sprawdź query param
+  if (params.get('reset') === 'true' && hash.includes('access_token')) {
+    setTimeout(() => openModal('resetModal'), 500);
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
 // ═══════ SESSION RESTORE ═══════
 async function restoreSession() {
   if (!sb) { state.loading = false; return; }
@@ -1324,6 +1452,9 @@ async function init() {
 
   // Sprawdź czy wracamy z Stripe (po płatności)
   await handlePaymentReturn();
+
+  // Sprawdź czy to link do resetu hasła
+  checkResetToken();
 
   // Scroll reveal observer
   const obs = new IntersectionObserver(entries => {
