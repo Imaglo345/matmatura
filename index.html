@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MatMatura – Kurs Maturalny z Matematyki</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07070d;--surface:#0f0f1a;--surface2:#161625;--surface3:#1e1e32;
+  --accent:#7c6df0;--accent2:#a78bfa;--accent3:#f472b6;
+  --green:#34d399;--red:#f87171;--gold:#fbbf24;
+  --text:#eaeaf4;--text-dim:#7a7a9e;--text-muted:#4a4a6a;
+  --border:rgba(255,255,255,0.06);--border-hover:rgba(124,109,240,0.35);
+  --radius:14px;--radius-sm:10px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+input{font-family:inherit}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:256px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+
+/* GLOW */
+.glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;animation:float 8s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-40px) scale(1.08)}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-weight:600;font-size:.95rem;transition:all .3s;letter-spacing:-.2px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;box-shadow:0 4px 24px rgba(124,109,240,0.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,109,240,0.45)}
+.btn-ghost{color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-hover);color:var(--accent2)}
+.btn-danger{background:rgba(248,113,113,0.12);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
+.btn-danger:hover{background:rgba(248,113,113,0.2)}
+.btn-sm{padding:8px 20px;font-size:.85rem}
+.btn-lg{padding:16px 36px;font-size:1.05rem}
+.btn-full{width:100%;justify-content:center}
+.btn:disabled{opacity:.5;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,7,13,0.75);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:all .3s}
+.logo{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;cursor:pointer}
+.logo b{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{color:var(--text-muted);font-weight:400}
+.nav-right{display:flex;gap:12px;align-items:center}
+.nav-link{font-size:.88rem;color:var(--text-dim);font-weight:500;padding:8px 14px;border-radius:8px;transition:.25s}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent3));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:pointer;position:relative}
+.user-menu{position:absolute;top:48px;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;min-width:180px;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.user-menu.open{display:flex}
+.user-menu-item{padding:10px 16px;border-radius:8px;font-size:.88rem;color:var(--text-dim);text-align:left;transition:.2s}
+.user-menu-item:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+.user-menu-item.danger{color:var(--red)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:440px;width:100%;position:relative;animation:slideUp .4s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--text-dim);transition:.2s}
+.modal-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.modal h2{font-size:1.5rem;font-weight:700;margin-bottom:8px;letter-spacing:-.5px}
+.modal .subtitle{color:var(--text-dim);font-size:.9rem;margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:.85rem;font-weight:500;margin-bottom:6px;color:var(--text-dim)}
+.form-group input{width:100%;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.95rem;transition:.3s;outline:none}
+.form-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,109,240,0.15)}
+.form-group input::placeholder{color:var(--text-muted)}
+.form-error{color:var(--red);font-size:.8rem;margin-top:6px;display:none}
+.form-switch{text-align:center;margin-top:20px;font-size:.88rem;color:var(--text-dim)}
+.form-switch a{color:var(--accent2);font-weight:600;cursor:pointer}
+.form-switch a:hover{text-decoration:underline}
+
+/* TOAST */
+.toast{position:fixed;top:80px;right:20px;z-index:300;padding:14px 24px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:500;animation:toastIn .4s ease;display:none;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+.toast.show{display:flex;align-items:center;gap:10px}
+.toast.success{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:var(--green)}
+.toast.error{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:var(--red)}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* PAGES */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ═══════ LANDING ═══════ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 40px 80px;overflow:hidden}
+.hero .g1{width:500px;height:500px;background:var(--accent);opacity:.1;top:-100px;right:-80px}
+.hero .g2{width:400px;height:400px;background:var(--accent3);opacity:.06;bottom:-50px;left:-100px}
+.hero-content{max-width:880px;text-align:center;position:relative;z-index:2}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:50px;background:rgba(124,109,240,0.1);border:1px solid rgba(124,109,240,0.2);font-size:.83rem;color:var(--accent2);margin-bottom:28px;animation:fadeInUp .7s ease}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:900;line-height:1.06;letter-spacing:-2px;margin-bottom:22px;animation:fadeInUp .7s ease .1s both}
+h1 .gr{background:linear-gradient(135deg,var(--accent2),var(--accent3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradShift 5s ease infinite}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-sub{font-size:1.15rem;color:var(--text-dim);max-width:580px;margin:0 auto 36px;animation:fadeInUp .7s ease .15s both}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeInUp .7s ease .25s both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-stats{display:flex;gap:44px;justify-content:center;margin-top:56px;animation:fadeInUp .7s ease .35s both;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:700;color:var(--accent2)}
+.stat-l{font-size:.78rem;color:var(--text-dim);margin-top:2px}
+
+/* SECTIONS */
+section{padding:90px 40px;position:relative}
+.sec-title{text-align:center;margin-bottom:56px}
+.sec-title .over{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:3px;margin-bottom:10px}
+.sec-title h2{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-1px}
+.sec-title p{color:var(--text-dim);margin-top:10px;max-width:520px;margin-left:auto;margin-right:auto;font-size:.95rem}
+
+/* LEVELS */
+.levels-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;max-width:860px;margin:0 auto}
+.lv-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px;position:relative;overflow:hidden;transition:.4s}
+.lv-card:hover{transform:translateY(-3px);border-color:var(--border-hover)}
+.lv-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));opacity:0;transition:.4s}
+.lv-card:hover::after{opacity:1}
+.lv-icon{font-size:2rem;margin-bottom:16px}
+.lv-card h3{font-size:1.3rem;font-weight:700;margin-bottom:6px}
+.lv-card .lv-d{color:var(--text-dim);font-size:.9rem;margin-bottom:20px}
+.lv-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.lv-list li{display:flex;align-items:center;gap:9px;font-size:.88rem;color:var(--text-dim)}
+.lv-list .ck{color:var(--green);font-weight:700}
+
+/* MODULES */
+.mod-wrap{max-width:780px;margin:0 auto}
+.mod-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 28px;margin-bottom:10px;display:flex;align-items:center;gap:18px;transition:.3s;cursor:default}
+.mod-item:hover{border-color:var(--border-hover);background:var(--surface2)}
+.mod-n{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--accent);opacity:.4;min-width:42px}
+.mod-info{flex:1}
+.mod-info h4{font-size:1.05rem;font-weight:600;margin-bottom:2px}
+.mod-info span{font-size:.82rem;color:var(--text-dim)}
+.mod-tags{display:flex;gap:6px;flex-wrap:wrap}
+.mod-tag{padding:4px 10px;border-radius:50px;font-size:.72rem;background:rgba(124,109,240,0.08);color:var(--accent2)}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:960px;margin:0 auto}
+.feat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:.4s}
+.feat:hover{transform:translateY(-3px);border-color:var(--border-hover)}
+.feat-e{font-size:1.8rem;margin-bottom:14px;display:block}
+.feat h4{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.feat p{font-size:.88rem;color:var(--text-dim)}
+
+/* DEMO */
+.demo-bg{background:var(--surface)}
+.demo-player{max-width:780px;margin:0 auto;background:var(--bg);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.dp-top{padding:10px 18px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border)}
+.dp-dot{width:9px;height:9px;border-radius:50%}
+.dp-dot.r{background:#ff5f57}.dp-dot.y{background:#ffbd2e}.dp-dot.g{background:#28c840}
+.dp-body{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(135deg,rgba(124,109,240,0.06),rgba(244,114,182,0.04))}
+.play-btn{width:72px;height:72px;border-radius:50%;background:rgba(124,109,240,0.85);display:flex;align-items:center;justify-content:center;transition:.3s;box-shadow:0 8px 36px rgba(124,109,240,0.35)}
+.play-btn:hover{transform:scale(1.08);background:var(--accent)}
+.play-btn svg{width:28px;height:28px;fill:#fff;margin-left:3px}
+.dp-label{position:absolute;bottom:16px;left:16px;padding:6px 14px;border-radius:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);font-size:.82rem;color:var(--text-dim)}
+
+/* PRICING */
+.price-card{max-width:500px;margin:0 auto;background:var(--surface);border:2px solid var(--accent);border-radius:22px;padding:44px;text-align:center;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(124,109,240,0.04),transparent,rgba(244,114,182,0.03),transparent);animation:spin 15s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.price-inner{position:relative;z-index:2}
+.price-badge{display:inline-block;padding:5px 14px;border-radius:50px;background:linear-gradient(135deg,var(--accent),var(--accent3));font-size:.78rem;font-weight:600;color:#fff;margin-bottom:20px}
+.price-val{font-size:3.6rem;font-weight:900;letter-spacing:-3px;margin-bottom:4px}
+.price-val span{font-size:1.1rem;color:var(--text-dim);font-weight:400;letter-spacing:0}
+.price-note{color:var(--text-dim);font-size:.88rem;margin-bottom:28px}
+.price-features{list-style:none;text-align:left;margin-bottom:32px;display:flex;flex-direction:column;gap:12px}
+.price-features li{display:flex;align-items:center;gap:10px;font-size:.92rem}
+.price-features li .pf{color:var(--green);font-weight:700}
+.btn-buy{background:linear-gradient(135deg,var(--accent),#8b5cf6,var(--accent3));background-size:200% 200%;animation:gradShift 4s ease infinite;padding:16px;font-size:1.05rem}
+.guarantee{margin-top:16px;font-size:.78rem;color:var(--text-dim);display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* TESTIMONIALS */
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:960px;margin:0 auto}
+.testi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+.testi-stars{color:var(--gold);margin-bottom:10px;font-size:.9rem;letter-spacing:2px}
+.testi p{font-size:.9rem;color:var(--text-dim);line-height:1.7;margin-bottom:14px;font-style:italic}
+.testi-auth{display:flex;align-items:center;gap:10px}
+.testi-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent3));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff}
+.testi-name{font-weight:600;font-size:.85rem}
+.testi-inf{font-size:.75rem;color:var(--text-dim)}
+
+/* FAQ */
+.faq-wrap{max-width:680px;margin:0 auto}
+.faq-i{border-bottom:1px solid var(--border);padding:20px 0}
+.faq-q{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:600;font-size:1rem;transition:.3s;width:100%;text-align:left;color:var(--text);padding:0}
+.faq-q:hover{color:var(--accent2)}
+.faq-t{font-family:'JetBrains Mono',monospace;font-size:1.3rem;color:var(--accent);transition:.3s}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s;color:var(--text-dim);font-size:.92rem;line-height:1.7}
+.faq-i.open .faq-a{max-height:200px;padding-top:14px}
+.faq-i.open .faq-t{transform:rotate(45deg)}
+
+/* CTA */
+.cta-sec{text-align:center;background:linear-gradient(180deg,var(--bg),rgba(124,109,240,0.04))}
+.cta-sec h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-1px;margin-bottom:14px}
+.cta-sec p{color:var(--text-dim);margin-bottom:28px;font-size:1.05rem}
+
+/* FOOTER */
+footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.foot-c{font-size:.82rem;color:var(--text-dim)}
+.foot-l{display:flex;gap:20px}
+.foot-l a{font-size:.82rem;color:var(--text-dim);transition:.3s}
+.foot-l a:hover{color:var(--accent2)}
+
+/* ═══════ DASHBOARD ═══════ */
+.dash{padding-top:80px}
+.dash-header{padding:40px 40px 0;max-width:1060px;margin:0 auto}
+.dash-welcome{font-size:1.6rem;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.dash-sub{color:var(--text-dim);font-size:.95rem;margin-bottom:32px}
+.dash-stats{display:flex;gap:16px;margin-bottom:40px;flex-wrap:wrap}
+.dash-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 28px;flex:1;min-width:160px}
+.dash-stat .ds-val{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--accent2)}
+.dash-stat .ds-lab{font-size:.8rem;color:var(--text-dim);margin-top:2px}
+.dash-progress-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:10px}
+.dash-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:3px;transition:width .6s ease}
+.dash-modules{padding:0 40px 60px;max-width:1060px;margin:0 auto}
+.dash-modules h3{font-size:1.2rem;font-weight:700;margin-bottom:20px}
+.dm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.dm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:.3s;cursor:pointer}
+.dm-card:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+.dm-card-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.dm-card-num{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--accent);opacity:.5}
+.dm-card h4{font-size:1.05rem;font-weight:600}
+.dm-card .dm-desc{font-size:.82rem;color:var(--text-dim);margin-bottom:14px}
+.dm-card-bottom{display:flex;align-items:center;justify-content:space-between}
+.dm-card-prog{font-size:.78rem;color:var(--text-dim)}
+.dm-card-prog b{color:var(--green)}
+.dm-card-bar{flex:1;height:4px;background:var(--surface3);border-radius:2px;margin-left:14px;overflow:hidden}
+.dm-card-fill{height:100%;background:var(--green);border-radius:2px;transition:width .6s}
+
+/* ═══════ COURSE VIEW ═══════ */
+.course-view{padding-top:70px}
+.cv-top{display:flex;align-items:center;gap:12px;padding:20px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
+.cv-back{padding:8px 16px;border-radius:8px;font-size:.85rem;color:var(--text-dim);transition:.2s;display:flex;align-items:center;gap:6px}
+.cv-back:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+.cv-title{font-weight:600;font-size:1rem}
+.cv-layout{display:grid;grid-template-columns:1fr 320px;min-height:calc(100vh - 130px)}
+.cv-main{padding:32px 40px;overflow-y:auto;max-height:calc(100vh - 130px)}
+.cv-sidebar{background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 130px);padding:20px 0}
+.cv-video{aspect-ratio:16/9;background:var(--surface2);border-radius:var(--radius);overflow:hidden;margin-bottom:28px;position:relative;display:flex;align-items:center;justify-content:center}
+.cv-video .play-btn{width:68px;height:68px}
+.cv-video-title{font-size:.8rem;position:absolute;bottom:14px;left:14px;padding:6px 12px;background:rgba(0,0,0,0.6);border-radius:6px;color:var(--text-dim)}
+.cv-lesson-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;letter-spacing:-.5px}
+.cv-lesson-meta{font-size:.85rem;color:var(--text-dim);margin-bottom:24px;display:flex;gap:16px}
+.cv-lesson-desc{font-size:.95rem;color:var(--text-dim);line-height:1.7;margin-bottom:28px}
+.cv-downloads h4{font-size:1rem;font-weight:600;margin-bottom:14px}
+.cv-dl-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;transition:.3s;cursor:pointer}
+.cv-dl-item:hover{border-color:var(--border-hover)}
+.cv-dl-icon{width:40px;height:40px;border-radius:8px;background:rgba(248,113,113,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.cv-dl-info{flex:1}
+.cv-dl-info .dl-name{font-size:.9rem;font-weight:500}
+.cv-dl-info .dl-size{font-size:.75rem;color:var(--text-dim)}
+.cv-dl-btn{font-size:.8rem;color:var(--accent2);font-weight:600}
+.cv-complete-btn{margin-top:24px}
+.cv-sidebar-title{padding:0 20px 12px;font-size:.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
+.cv-lesson-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:.2s;border-left:3px solid transparent}
+.cv-lesson-item:hover{background:rgba(255,255,255,0.02)}
+.cv-lesson-item.active{background:rgba(124,109,240,0.06);border-left-color:var(--accent)}
+.cv-lesson-item.done{opacity:.7}
+.cv-lesson-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:.2s}
+.cv-lesson-item.done .cv-lesson-check{background:var(--green);border-color:var(--green);color:#fff}
+.cv-lesson-item .cv-l-title{font-size:.85rem;font-weight:500}
+.cv-lesson-item .cv-l-dur{font-size:.72rem;color:var(--text-dim)}
+
+/* PAYMENT STEPS */
+.pay-steps{display:flex;gap:8px;margin-bottom:24px}
+.pay-step{flex:1;height:3px;border-radius:2px;background:var(--surface3)}
+.pay-step.active{background:var(--accent)}
+.pay-step.done{background:var(--green)}
+.pay-summary{background:var(--surface2);border-radius:var(--radius-sm);padding:16px;margin-bottom:24px}
+.pay-summary-row{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:6px}
+.pay-summary-row.total{font-weight:700;font-size:1rem;color:var(--text);border-top:1px solid var(--border);padding-top:8px;margin-top:8px}
+.pay-methods{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.pay-method{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:.2s}
+.pay-method:hover,.pay-method.selected{border-color:var(--accent);background:rgba(124,109,240,0.05)}
+.pay-method-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-muted);display:flex;align-items:center;justify-content:center;transition:.2s}
+.pay-method.selected .pay-method-radio{border-color:var(--accent)}
+.pay-method.selected .pay-method-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.pay-method-name{font-size:.92rem;font-weight:500}
+
+/* SUCCESS */
+.success-icon{width:80px;height:80px;border-radius:50%;background:rgba(52,211,153,0.12);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px}
+.confetti{position:absolute;font-size:1.2rem;animation:confettiFall 2s ease-in forwards;pointer-events:none}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(300px) rotate(720deg)}}
+
+/* RESPONSIVE */
+@media(max-width:900px){.cv-layout{grid-template-columns:1fr}.cv-sidebar{display:none}}
+@media(max-width:768px){
+  nav{padding:12px 18px}
+  .nav-link{display:none}
+  section{padding:60px 18px}
+  .hero{padding:100px 18px 50px}
+  .hero-stats{gap:20px}
+  .levels-grid,.feat-grid,.test-grid,.dm-grid{grid-template-columns:1fr}
+  .price-card{padding:28px 20px}
+  .price-val{font-size:2.8rem}
+  .dash-header,.dash-modules{padding-left:18px;padding-right:18px}
+  .cv-main{padding:20px 18px}
+  footer{flex-direction:column;text-align:center;padding:30px 18px}
+}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* LOADING SPINNER */
+.spinner{width:24px;height:24px;border:3px solid var(--surface3);border-top-color:var(--accent);border-radius:50%;animation:spinAnim .7s linear infinite;margin:0 auto}
+@keyframes spinAnim{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="logo" onclick="navigate('landing')"><b>MatMatura</b><span>.pl</span></div>
+  <div class="nav-right" id="navRight"></div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════ MODALS ═══════ -->
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2>Zaloguj się</h2>
+    <p class="subtitle">Wróć do nauki tam, gdzie skończyłeś</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="twoj@email.pl">
+    </div>
+    <div class="form-group">
+      <label>Hasło</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+      <div class="form-error" id="loginError">Nieprawidłowy email lub hasło</div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="handleLogin()" id="loginBtn">Zaloguj się</button>
+    <div class="form-switch">Nie masz konta? <a onclick="closeModal('loginModal');openModal('registerModal')">Zarejestruj się</a></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2>Stwórz konto</h2>
+    <p class="subtitle">Dołącz do 2500+ maturzystów</p>
+    <div class="form-group">
+      <label>Imię</label>
+      <input type="text" id="regName" placeholder="Jan">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="twoj@email.pl">
+    </div>
+    <div class="form-group">
+      <label>Hasło</label>
+      <input type="password" id="regPass" placeholder="Min. 6 znaków">
+      <div class="form-error" id="regError"></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="handleRegister()" id="regBtn">Zarejestruj się</button>
+    <div class="form-switch">Masz już konto? <a onclick="closeModal('registerModal');openModal('loginModal')">Zaloguj się</a></div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('payModal')">✕</button>
+    <div id="payContent"></div>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: LANDING ═══════ -->
+<div class="page active" id="page-landing">
+
+  <section class="hero">
+    <div class="glow-orb g1"></div>
+    <div class="glow-orb g2"></div>
+    <div class="hero-content">
+      <div class="badge"><span class="dot"></span> Matura 2026 – Nabór otwarty</div>
+      <h1>Zdaj maturę z matmy<br><span class="gr">bez stresu i na swoich zasadach</span></h1>
+      <p class="hero-sub">Kompletny kurs z matematyki — podstawa i rozszerzenie. Wideo, zadania, rozwiązania. Kupujesz raz, masz dostęp na zawsze.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">🎓 Kup dostęp — 199 zł</button>
+        <a href="#demo-section" class="btn btn-ghost btn-lg">▶ Obejrzyj demo</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n">120+</div><div class="stat-l">Lekcji wideo</div></div>
+        <div class="stat"><div class="stat-n">50+</div><div class="stat-l">PDF z zadaniami</div></div>
+        <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Zdawalność</div></div>
+        <div class="stat"><div class="stat-n">2500+</div><div class="stat-l">Kursantów</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title reveal"><div class="over">Dwa poziomy</div><h2>Wybierz swój cel maturalny</h2><p>Przygotuj się merytorycznie — na konkretnych zadaniach maturalnych.</p></div>
+    <div class="levels-grid">
+      <div class="lv-card reveal">
+        <div class="lv-icon">📗</div>
+        <h3>Poziom Podstawowy</h3>
+        <p class="lv-d">Dla każdego maturzysty. Solidne podstawy i pewność na egzaminie.</p>
+        <ul class="lv-list">
+          <li><span class="ck">✓</span> Pełny zakres CKE</li>
+          <li><span class="ck">✓</span> Zadania zamknięte i otwarte</li>
+          <li><span class="ck">✓</span> Rozwiązania krok po kroku</li>
+          <li><span class="ck">✓</span> Arkusze próbne</li>
+        </ul>
+      </div>
+      <div class="lv-card reveal">
+        <div class="lv-icon">📘</div>
+        <h3>Poziom Rozszerzony</h3>
+        <p class="lv-d">Dla ambitnych. Zaawansowane techniki na wysokie wyniki.</p>
+        <ul class="lv-list">
+          <li><span class="ck">✓</span> Wszystko z podstawy</li>
+          <li><span class="ck">✓</span> Analiza i dowody</li>
+          <li><span class="ck">✓</span> Trygonometria rozszerzona</li>
+          <li><span class="ck">✓</span> Zadania optymalizacyjne</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--surface)" id="modules-section">
+    <div class="sec-title reveal"><div class="over">Program kursu</div><h2>6 modułów, pełne przygotowanie</h2><p>Każdy moduł = lekcje wideo + PDF z zadaniami + PDF z rozwiązaniami</p></div>
+    <div class="mod-wrap" id="landingModules"></div>
+  </section>
+
+  <section>
+    <div class="sec-title reveal"><div class="over">Dlaczego my</div><h2>Kurs stworzony pod maturę</h2></div>
+    <div class="feat-grid">
+      <div class="feat reveal"><span class="feat-e">🎥</span><h4>Nagrania wideo HD</h4><p>Każde zagadnienie wyjaśnione na ekranie, krok po kroku.</p></div>
+      <div class="feat reveal"><span class="feat-e">📄</span><h4>PDF z zadaniami</h4><p>Zadania wzorowane na maturze + pełne rozwiązania.</p></div>
+      <div class="feat reveal"><span class="feat-e">♾️</span><h4>Dostęp na zawsze</h4><p>Jedna płatność — zero subskrypcji. Wracasz kiedy chcesz.</p></div>
+      <div class="feat reveal"><span class="feat-e">📱</span><h4>Działa na telefonie</h4><p>Ucz się w autobusie, w łóżku. Responsywny design.</p></div>
+      <div class="feat reveal"><span class="feat-e">📊</span><h4>Śledzenie postępu</h4><p>Widzisz co przerobione, co zostało. Motywacja na wyciągnięcie ręki.</p></div>
+      <div class="feat reveal"><span class="feat-e">🏆</span><h4>Pod maturę, nie teorię</h4><p>Materiały skupione na tym, co pojawia się na egzaminie.</p></div>
+    </div>
+  </section>
+
+  <section class="demo-bg" id="demo-section">
+    <div class="sec-title reveal"><div class="over">Zobacz jak wygląda nauka</div><h2>Przykładowa lekcja</h2><p>Przekonaj się, zanim kupisz.</p></div>
+    <div class="demo-player reveal">
+      <div class="dp-top"><span class="dp-dot r"></span><span class="dp-dot y"></span><span class="dp-dot g"></span></div>
+      <div class="dp-body" id="demoVideo">
+        <button class="play-btn" onclick="playDemo()">
+          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <div class="dp-label">Moduł 2 · Funkcja kwadratowa — wierzchołek paraboli</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing-section">
+    <div class="sec-title reveal"><div class="over">Prosta cena</div><h2>Jeden kurs, jeden zakup</h2><p>Żadnych ukrytych opłat, subskrypcji ani limitów.</p></div>
+    <div class="price-card reveal">
+      <div class="price-inner">
+        <div class="price-badge">🔥 Najczęściej wybierany</div>
+        <div class="price-val">199 zł <span>jednorazowo</span></div>
+        <div class="price-note">Pełny kurs: podstawa + rozszerzenie</div>
+        <ul class="price-features">
+          <li><span class="pf">✓</span> 120+ lekcji wideo</li>
+          <li><span class="pf">✓</span> 50+ PDF z zadaniami i rozwiązaniami</li>
+          <li><span class="pf">✓</span> Poziom podstawowy + rozszerzony</li>
+          <li><span class="pf">✓</span> Dostęp na zawsze</li>
+          <li><span class="pf">✓</span> Arkusze maturalne z omówieniem</li>
+          <li><span class="pf">✓</span> Aktualizacje bez dopłat</li>
+        </ul>
+        <button class="btn btn-primary btn-full btn-buy" onclick="handleBuyClick()">Kupuję dostęp — 199 zł</button>
+        <div class="guarantee">🔒 14-dniowa gwarancja zwrotu</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--surface)" id="opinions-section">
+    <div class="sec-title reveal"><div class="over">Opinie kursantów</div><h2>Mówią o nas</h2></div>
+    <div class="test-grid">
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„Dzięki kursowi zdałam maturę na 86%. Tłumaczenia są mega przystępne, w końcu zrozumiałam trygonometrię!"</p>
+        <div class="testi-auth"><div class="testi-av">AK</div><div><div class="testi-name">Ania K.</div><div class="testi-inf">Matura 2025 · Podstawa</div></div></div>
+      </div>
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„Najlepsze 199 zł jakie wydałem. Rozszerzenie wytłumaczone lepiej niż na lekcjach. 92%!"</p>
+        <div class="testi-auth"><div class="testi-av">MT</div><div><div class="testi-name">Maciek T.</div><div class="testi-inf">Matura 2025 · Rozszerzenie</div></div></div>
+      </div>
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„PDF-y z zadaniami to złoto. Drukowałam i robiłam codziennie po kilka stron. Polecam!"</p>
+        <div class="testi-auth"><div class="testi-av">ZW</div><div><div class="testi-name">Zosia W.</div><div class="testi-inf">Matura 2025 · Podstawa</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq-section">
+    <div class="sec-title reveal"><div class="over">Pytania</div><h2>FAQ</h2></div>
+    <div class="faq-wrap" id="faqContainer"></div>
+  </section>
+
+  <section class="cta-sec">
+    <div class="reveal" style="max-width:580px;margin:0 auto">
+      <h2>Gotowy na maturę? 🚀</h2>
+      <p>Dołącz do 2500+ kursantów, którzy zdali maturę z naszym kursem.</p>
+      <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">Kup dostęp — 199 zł</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-c">© 2026 MatMatura.pl — Wszelkie prawa zastrzeżone.</div>
+    <div class="foot-l">
+      <a href="#">Regulamin</a><a href="#">Polityka prywatności</a><a href="#">Kontakt</a><a href="#">Instagram</a><a href="#">TikTok</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════ PAGE: DASHBOARD ═══════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash">
+    <div class="dash-header">
+      <div class="dash-welcome" id="dashWelcome">Cześć! 👋</div>
+      <div class="dash-sub">Kontynuuj naukę — każdy krok przybliża Cię do matury.</div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="ds-val" id="dsProgress">0%</div>
+          <div class="ds-lab">Postęp kursu</div>
+          <div class="dash-progress-bar"><div class="dash-progress-fill" id="dsBar" style="width:0%"></div></div>
+        </div>
+        <div class="dash-stat">
+          <div class="ds-val" id="dsCompleted">0/100</div>
+          <div class="ds-lab">Ukończone lekcje</div>
+        </div>
+        <div class="dash-stat">
+          <div class="ds-val" id="dsTime">0h</div>
+          <div class="ds-lab">Czas nauki</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-modules">
+      <h3>Moduły kursu</h3>
+      <div class="dm-grid" id="dashModules"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: COURSE VIEW ═══════ -->
+<div class="page" id="page-course">
+  <div class="course-view">
+    <div class="cv-top">
+      <button class="cv-back" onclick="navigate('dashboard')">← Wróć do dashboardu</button>
+      <div class="cv-title" id="cvModuleTitle"></div>
+    </div>
+    <div class="cv-layout">
+      <div class="cv-main" id="cvMain"></div>
+      <div class="cv-sidebar" id="cvSidebar"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ═══════ DATA ═══════
+const COURSE_DATA = [
+  {
+    id: 1, title: "Liczby i działania", desc: "Potęgi, pierwiastki, logarytmy, procenty",
+    lessons: [
+      {title:"Potęgi i ich własności",dur:"12:30",desc:"Poznasz zasady mnożenia, dzielenia i potęgowania potęg. Nauczysz się upraszczać wyrażenia z potęgami."},
+      {title:"Pierwiastki",dur:"10:15",desc:"Działania na pierwiastkach, usuwanie niewymierności z mianownika."},
+      {title:"Logarytmy — wprowadzenie",dur:"14:00",desc:"Definicja logarytmu, podstawowe własności, zmiana podstawy."},
+      {title:"Logarytmy — zadania maturalne",dur:"18:20",desc:"Rozwiązywanie typowych zadań maturalnych z logarytmami."},
+      {title:"Procenty i punkty procentowe",dur:"11:45",desc:"Obliczenia procentowe, podwyżki, obniżki, VAT."},
+      {title:"Notacja wykładnicza",dur:"8:30",desc:"Zapis liczb w postaci a × 10^n, działania."},
+      {title:"Liczby wymierne i niewymierne",dur:"9:00",desc:"Rozróżnianie, dowodzenie niewymierności."},
+      {title:"Wartość bezwzględna",dur:"13:10",desc:"Definicja, własności, równania i nierówności z wartością bezwzględną."},
+      {title:"Działania na zbiorach liczbowych",dur:"10:00",desc:"Zbiory, przedziały, operacje na zbiorach."},
+      {title:"Powtórka i zadania",dur:"15:00",desc:"Zadania podsumowujące cały moduł."},
+    ]
+  },
+  {
+    id: 2, title: "Funkcje", desc: "Liniowa, kwadratowa, wykładnicza, logarytmiczna",
+    lessons: [
+      {title:"Pojęcie funkcji",dur:"11:00",desc:"Definicja, dziedzina, zbiór wartości, odczytywanie z wykresu."},
+      {title:"Funkcja liniowa",dur:"13:20",desc:"Wzór, wykres, współczynnik kierunkowy, miejsce zerowe."},
+      {title:"Funkcja kwadratowa — wzory",dur:"15:30",desc:"Postać ogólna, kanoniczna, iloczynowa. Delta."},
+      {title:"Funkcja kwadratowa — wykres",dur:"14:00",desc:"Rysowanie paraboli, wierzchołek, oś symetrii."},
+      {title:"Funkcja kwadratowa — zadania",dur:"18:00",desc:"Nierówności kwadratowe, zadania optymalizacyjne."},
+      {title:"Funkcja wykładnicza",dur:"12:00",desc:"Wykres, własności, równania i nierówności wykładnicze."},
+      {title:"Funkcja logarytmiczna",dur:"13:00",desc:"Wykres, własności, równania logarytmiczne."},
+      {title:"Przekształcenia wykresów",dur:"16:00",desc:"Przesunięcia, odbicia, skalowanie."},
+      {title:"Funkcja wielomianowa",dur:"14:30",desc:"Wielomiany, dzielenie, schemat Hornera."},
+      {title:"Zadania maturalne — funkcje",dur:"20:00",desc:"Komplet zadań z arkuszy CKE."},
+    ]
+  },
+  {
+    id: 3, title: "Trygonometria", desc: "Funkcje trygonometryczne, tożsamości, równania",
+    lessons: [
+      {title:"Kąty i ich miary",dur:"10:00",desc:"Stopnie, radiany, zamiana jednostek."},
+      {title:"Sinus, cosinus, tangens",dur:"14:00",desc:"Definicje w trójkącie prostokątnym i na okręgu."},
+      {title:"Wartości funkcji trygonometrycznych",dur:"12:30",desc:"Kąty: 30°, 45°, 60°, 90° i ich wielokrotności."},
+      {title:"Tożsamości trygonometryczne",dur:"16:00",desc:"Jedynka trygonometryczna, wzory redukcyjne."},
+      {title:"Równania trygonometryczne",dur:"18:00",desc:"Rozwiązywanie równań z sin, cos, tg."},
+      {title:"Twierdzenie sinusów",dur:"13:00",desc:"Dowód, zastosowania, zadania."},
+      {title:"Twierdzenie cosinusów",dur:"13:30",desc:"Dowód, zastosowania, zadania."},
+      {title:"Funkcje trygonometryczne — wykresy",dur:"15:00",desc:"Wykresy sin, cos, tg — okres, amplituda, przesunięcia."},
+      {title:"Zadania maturalne — trygonometria",dur:"20:00",desc:"Arkusze CKE z pełnym omówieniem."},
+    ]
+  },
+  {
+    id: 4, title: "Geometria", desc: "Planimetria, stereometria, geometria analityczna",
+    lessons: [
+      {title:"Kąty i wielokąty",dur:"11:00",desc:"Kąty w trójkącie, czworokącie, wielokącie foremnym."},
+      {title:"Trójkąty — własności i pola",dur:"14:00",desc:"Rodzaje trójkątów, wzory na pole, wysokości."},
+      {title:"Okrąg i koło",dur:"13:00",desc:"Obwód, pole, kąty wpisane i środkowe."},
+      {title:"Czworokąty",dur:"12:30",desc:"Prostokąt, romb, trapez, równoległobok."},
+      {title:"Podobieństwo i skala",dur:"11:00",desc:"Cechy podobieństwa, skala, zastosowania."},
+      {title:"Geometria analityczna — proste",dur:"15:00",desc:"Równanie prostej, odległość punktu od prostej."},
+      {title:"Geometria analityczna — okrąg",dur:"14:00",desc:"Równanie okręgu, wzajemne położenie."},
+      {title:"Stereometria — graniastosłupy",dur:"16:00",desc:"Objętość, pole powierzchni, przekroje."},
+      {title:"Stereometria — ostrosłupy",dur:"15:30",desc:"Objętość, pole, kąty dwuścienne."},
+      {title:"Bryły obrotowe",dur:"14:00",desc:"Walec, stożek, kula — wzory, zadania."},
+      {title:"Zadania maturalne — geometria",dur:"22:00",desc:"Komplet zadań geometrycznych z CKE."},
+    ]
+  },
+  {
+    id: 5, title: "Statystyka i prawdopodobieństwo", desc: "Kombinatoryka, rozkłady, analiza danych",
+    lessons: [
+      {title:"Średnia, mediana, moda",dur:"10:00",desc:"Miary tendencji centralnej, interpretacja."},
+      {title:"Odchylenie standardowe",dur:"11:00",desc:"Obliczanie i interpretacja rozrzutu danych."},
+      {title:"Permutacje i kombinacje",dur:"14:00",desc:"Symbol Newtona, silnia, zliczanie."},
+      {title:"Prawdopodobieństwo klasyczne",dur:"12:00",desc:"Definicja, zdarzenia, drzewo zdarzeń."},
+      {title:"Prawdopodobieństwo warunkowe",dur:"13:30",desc:"Wzór Bayesa, niezależność zdarzeń."},
+      {title:"Rozkład dwumianowy",dur:"15:00",desc:"Schemat Bernoulliego, zastosowania."},
+      {title:"Zadania maturalne — statystyka",dur:"18:00",desc:"Typowe zadania z arkuszy CKE."},
+    ]
+  },
+  {
+    id: 6, title: "Zadania maturalne", desc: "Pełne arkusze z omówieniem krok po kroku",
+    lessons: [
+      {title:"Arkusz próbny CKE 2024 — cz. 1",dur:"25:00",desc:"Zadania zamknięte — pełne omówienie."},
+      {title:"Arkusz próbny CKE 2024 — cz. 2",dur:"28:00",desc:"Zadania otwarte — rozwiązania krok po kroku."},
+      {title:"Arkusz maturalny 2023 — cz. 1",dur:"24:00",desc:"Zadania zamknięte z komentarzem."},
+      {title:"Arkusz maturalny 2023 — cz. 2",dur:"26:00",desc:"Zadania otwarte z pełnym rozwiązaniem."},
+      {title:"Arkusz maturalny 2022 — cz. 1",dur:"22:00",desc:"Zadania zamknięte z arkusza 2022."},
+      {title:"Arkusz maturalny 2022 — cz. 2",dur:"27:00",desc:"Zadania otwarte z arkusza 2022."},
+      {title:"Najczęstsze pułapki na maturze",dur:"18:00",desc:"Typowe błędy i jak ich unikać."},
+      {title:"Strategia rozwiązywania arkusza",dur:"15:00",desc:"Zarządzanie czasem, kolejność zadań."},
+      {title:"Symulacja matury — na czas",dur:"30:00",desc:"Pełny arkusz do rozwiązania w warunkach egzaminacyjnych."},
+    ]
+  }
+];
+
+const FAQ_DATA = [
+  {q:"Jak długo mam dostęp do kursu?",a:"Na zawsze. Płacisz raz i kurs jest Twój — bez limitu czasowego, bez dodatkowych opłat."},
+  {q:"Czy kurs obejmuje zarówno podstawę, jak i rozszerzenie?",a:"Tak! W jednej cenie dostajesz pełny materiał na oba poziomy — podstawowy i rozszerzony."},
+  {q:"Jak wygląda nauka?",a:"Oglądasz lekcje wideo, pobierasz PDF z zadaniami, rozwiązujesz je samodzielnie, a potem sprawdzasz z naszymi rozwiązaniami."},
+  {q:"Jakie metody płatności akceptujecie?",a:"Obsługujemy Przelewy24, BLIK, karty płatnicze i szybkie przelewy. Dostęp jest nadawany automatycznie."},
+  {q:"Czy mogę zwrócić kurs?",a:"Tak — 14-dniowa gwarancja satysfakcji. Jeśli kurs nie spełni oczekiwań, zwrócimy pieniądze."},
+  {q:"Czy mogę uczyć się na telefonie?",a:"Tak! Strona jest w pełni responsywna. Wideo i PDF-y działają na każdym urządzeniu."},
+];
+
+// ═══════ STATE ═══════
+let state = {
+  user: null,        // {name, email, hasCourse}
+  progress: {},      // {moduleId: {lessonIndex: true}}
+  currentModule: null,
+  currentLesson: 0,
+  payMethod: 'blik'
+};
+
+// Try restore state
+try {
+  const saved = sessionStorage.getItem('matmatura_state');
+  if (saved) state = JSON.parse(saved);
+} catch(e) {}
+
+function saveState() {
+  try { sessionStorage.setItem('matmatura_state', JSON.stringify(state)); } catch(e) {}
+}
+
+// ═══════ HELPERS ═══════
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.className = 'toast show ' + type;
+  t.innerHTML = (type === 'success' ? '✓' : '✕') + ' ' + msg;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function getTotalLessons() { return COURSE_DATA.reduce((s,m) => s + m.lessons.length, 0); }
+function getCompletedLessons() {
+  let c = 0;
+  for (let mid in state.progress) { c += Object.keys(state.progress[mid]).length; }
+  return c;
+}
+function getModuleProgress(moduleId) {
+  const mod = COURSE_DATA.find(m => m.id === moduleId);
+  if (!mod) return 0;
+  const done = state.progress[moduleId] ? Object.keys(state.progress[moduleId]).length : 0;
+  return Math.round((done / mod.lessons.length) * 100);
+}
+
+// ═══════ NAVIGATION ═══════
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+  renderNav();
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'course') renderCourse();
+}
+
+// ═══════ NAV RENDER ═══════
+function renderNav() {
+  const nr = document.getElementById('navRight');
+  if (state.user) {
+    const initials = state.user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    nr.innerHTML = `
+      <a class="nav-link" onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</a>
+      <div class="user-avatar" onclick="this.querySelector('.user-menu').classList.toggle('open')">${initials}
+        <div class="user-menu" id="userMenu">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);margin-bottom:4px">
+            <div style="font-weight:600;font-size:.9rem">${state.user.name}</div>
+            <div style="font-size:.78rem;color:var(--text-dim)">${state.user.email}</div>
+          </div>
+          <button class="user-menu-item" onclick="navigate('dashboard')">📊 Dashboard</button>
+          <button class="user-menu-item danger" onclick="handleLogout()">Wyloguj się</button>
+        </div>
+      </div>`;
+  } else {
+    nr.innerHTML = `
+      <a class="nav-link" href="#modules-section">Moduły</a>
+      <a class="nav-link" href="#pricing-section">Cennik</a>
+      <a class="nav-link" href="#opinions-section">Opinie</a>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('loginModal')">Zaloguj</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal('registerModal')">Dołącz</button>`;
+  }
+}
+
+// ═══════ AUTH ═══════
+function handleRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const err = document.getElementById('regError');
+
+  if (!name || !email || !pass) { err.textContent='Wypełnij wszystkie pola'; err.style.display='block'; return; }
+  if (pass.length < 6) { err.textContent='Hasło musi mieć min. 6 znaków'; err.style.display='block'; return; }
+  if (!email.includes('@')) { err.textContent='Podaj prawidłowy email'; err.style.display='block'; return; }
+
+  err.style.display = 'none';
+  state.user = { name, email, hasCourse: false };
+  saveState();
+  closeModal('registerModal');
+  showToast('Konto utworzone! Witaj, ' + name.split(' ')[0] + ' 🎉');
+  renderNav();
+  navigate('landing');
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+
+  if (!email || !pass) { err.style.display='block'; err.textContent='Wypełnij wszystkie pola'; return; }
+  if (!state.user || state.user.email !== email) {
+    // Demo: auto-login with any credentials
+    state.user = { name: email.split('@')[0], email, hasCourse: false };
+  }
+
+  err.style.display = 'none';
+  saveState();
+  closeModal('loginModal');
+  showToast('Zalogowano pomyślnie!');
+  renderNav();
+  if (state.user.hasCourse) navigate('dashboard');
+}
+
+function handleLogout() {
+  state.user = null;
+  state.progress = {};
+  saveState();
+  showToast('Wylogowano');
+  navigate('landing');
+  renderNav();
+}
+
+// ═══════ PAYMENT ═══════
+function handleBuyClick() {
+  if (!state.user) {
+    openModal('registerModal');
+    return;
+  }
+  if (state.user.hasCourse) {
+    navigate('dashboard');
+    return;
+  }
+  renderPayStep1();
+  openModal('payModal');
+}
+
+function renderPayStep1() {
+  document.getElementById('payContent').innerHTML = `
+    <h2>Kup dostęp</h2>
+    <p class="subtitle">Wybierz metodę płatności</p>
+    <div class="pay-steps"><div class="pay-step active"></div><div class="pay-step"></div><div class="pay-step"></div></div>
+    <div class="pay-summary">
+      <div class="pay-summary-row"><span>Kurs MatMatura (P+R)</span><span>199 zł</span></div>
+      <div class="pay-summary-row" style="color:var(--green)"><span>Rabat startowy</span><span>-0 zł</span></div>
+      <div class="pay-summary-row total"><span>Do zapłaty</span><span>199 zł</span></div>
+    </div>
+    <div class="pay-methods">
+      <div class="pay-method ${state.payMethod==='blik'?'selected':''}" onclick="selectPay('blik')">
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-name">📱 BLIK</div>
+      </div>
+      <div class="pay-method ${state.payMethod==='card'?'selected':''}" onclick="selectPay('card')">
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-name">💳 Karta płatnicza</div>
+      </div>
+      <div class="pay-method ${state.payMethod==='p24'?'selected':''}" onclick="selectPay('p24')">
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-name">🏦 Przelewy24</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="renderPayStep2()">Dalej →</button>
+  `;
+}
+
+function selectPay(method) {
+  state.payMethod = method;
+  renderPayStep1();
+}
+
+function renderPayStep2() {
+  let fields = '';
+  if (state.payMethod === 'blik') {
+    fields = `<div class="form-group"><label>Kod BLIK</label><input type="text" id="payInput" placeholder="_ _ _ _ _ _" maxlength="6" style="text-align:center;font-family:'JetBrains Mono';font-size:1.4rem;letter-spacing:8px"></div>`;
+  } else if (state.payMethod === 'card') {
+    fields = `
+      <div class="form-group"><label>Numer karty</label><input type="text" id="payInput" placeholder="1234 5678 9012 3456" maxlength="19"></div>
+      <div style="display:flex;gap:12px">
+        <div class="form-group" style="flex:1"><label>Data ważności</label><input type="text" placeholder="MM/RR" maxlength="5"></div>
+        <div class="form-group" style="flex:1"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+      </div>`;
+  } else {
+    fields = `<p style="text-align:center;color:var(--text-dim);padding:20px 0">Po kliknięciu zostaniesz przekierowany do Przelewy24</p>`;
+  }
+
+  document.getElementById('payContent').innerHTML = `
+    <h2>Płatność</h2>
+    <p class="subtitle">${state.payMethod==='blik'?'Wpisz kod BLIK':state.payMethod==='card'?'Dane karty':'Przelewy24'}</p>
+    <div class="pay-steps"><div class="pay-step done"></div><div class="pay-step active"></div><div class="pay-step"></div></div>
+    ${fields}
+    <button class="btn btn-primary btn-full" onclick="processPayment()" id="payBtn">Zapłać 199 zł</button>
+    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="renderPayStep1()">← Wróć</button>
+  `;
+}
+
+function processPayment() {
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div>';
+
+  setTimeout(() => {
+    state.user.hasCourse = true;
+    saveState();
+    renderPaySuccess();
+  }, 2000);
+}
+
+function renderPaySuccess() {
+  const modal = document.getElementById('payContent');
+  modal.innerHTML = `
+    <div class="pay-steps"><div class="pay-step done"></div><div class="pay-step done"></div><div class="pay-step done" style="background:var(--green)"></div></div>
+    <div style="position:relative;padding:20px 0">
+      <div class="success-icon">✓</div>
+      <h2 style="text-align:center">Płatność udana! 🎉</h2>
+      <p class="subtitle" style="text-align:center">Masz teraz pełny dostęp do kursu MatMatura. Czas zacząć naukę!</p>
+      <button class="btn btn-primary btn-full btn-lg" onclick="closeModal('payModal');navigate('dashboard')">Przejdź do kursu →</button>
+    </div>
+  `;
+  // Confetti!
+  for (let i = 0; i < 20; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.textContent = ['🎉','⭐','🎊','✨','🎓'][Math.floor(Math.random()*5)];
+    c.style.left = Math.random()*100+'%';
+    c.style.top = '-10px';
+    c.style.animationDelay = Math.random()*1+'s';
+    c.style.animationDuration = (1.5+Math.random())+'s';
+    modal.querySelector('div').appendChild(c);
+  }
+  showToast('Gratulacje! Kurs jest Twój!');
+}
+
+// ═══════ DASHBOARD ═══════
+function renderDashboard() {
+  if (!state.user || !state.user.hasCourse) { navigate('landing'); return; }
+
+  document.getElementById('dashWelcome').textContent = `Cześć, ${state.user.name.split(' ')[0]}! 👋`;
+
+  const total = getTotalLessons();
+  const done = getCompletedLessons();
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+  const hours = Math.round(done * 0.22); // ~13 min avg per lesson
+
+  document.getElementById('dsProgress').textContent = pct + '%';
+  document.getElementById('dsBar').style.width = pct + '%';
+  document.getElementById('dsCompleted').textContent = done + '/' + total;
+  document.getElementById('dsTime').textContent = hours + 'h';
+
+  const grid = document.getElementById('dashModules');
+  grid.innerHTML = COURSE_DATA.map(m => {
+    const mp = getModuleProgress(m.id);
+    const doneL = state.progress[m.id] ? Object.keys(state.progress[m.id]).length : 0;
+    return `
+      <div class="dm-card" onclick="openModule(${m.id})">
+        <div class="dm-card-top">
+          <div class="dm-card-num">0${m.id}</div>
+          <h4>${m.title}</h4>
+        </div>
+        <div class="dm-desc">${m.desc}</div>
+        <div class="dm-card-bottom">
+          <div class="dm-card-prog">${mp===100?'<b>Ukończony ✓</b>':`${doneL}/${m.lessons.length} lekcji`}</div>
+          <div class="dm-card-bar"><div class="dm-card-fill" style="width:${mp}%"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ═══════ COURSE VIEW ═══════
+function openModule(moduleId) {
+  state.currentModule = moduleId;
+  state.currentLesson = 0;
+  saveState();
+  navigate('course');
+}
+
+function renderCourse() {
+  const mod = COURSE_DATA.find(m => m.id === state.currentModule);
+  if (!mod) { navigate('dashboard'); return; }
+
+  document.getElementById('cvModuleTitle').textContent = `Moduł ${mod.id}: ${mod.title}`;
+
+  // Sidebar
+  const sidebar = document.getElementById('cvSidebar');
+  sidebar.innerHTML = `
+    <div class="cv-sidebar-title">Lekcje (${mod.lessons.length})</div>
+    ${mod.lessons.map((l, i) => {
+      const isDone = state.progress[mod.id] && state.progress[mod.id][i];
+      const isActive = i === state.currentLesson;
+      return `<div class="cv-lesson-item ${isActive?'active':''} ${isDone?'done':''}" onclick="selectLesson(${i})">
+        <div class="cv-lesson-check">${isDone?'✓':''}</div>
+        <div>
+          <div class="cv-l-title">${l.title}</div>
+          <div class="cv-l-dur">${l.dur}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+
+  renderLesson();
+}
+
+function selectLesson(index) {
+  state.currentLesson = index;
+  saveState();
+  renderCourse();
+}
+
+function renderLesson() {
+  const mod = COURSE_DATA.find(m => m.id === state.currentModule);
+  const lesson = mod.lessons[state.currentLesson];
+  const isDone = state.progress[mod.id] && state.progress[mod.id][state.currentLesson];
+
+  document.getElementById('cvMain').innerHTML = `
+    <div class="cv-video">
+      <button class="play-btn" onclick="playLesson()">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="cv-video-title">Moduł ${mod.id} · ${lesson.title}</div>
+    </div>
+    <div class="cv-lesson-title">${lesson.title}</div>
+    <div class="cv-lesson-meta">
+      <span>⏱ ${lesson.dur}</span>
+      <span>📚 Moduł ${mod.id}</span>
+      <span>${isDone ? '<span style="color:var(--green)">✓ Ukończona</span>' : '○ W trakcie'}</span>
+    </div>
+    <div class="cv-lesson-desc">${lesson.desc}</div>
+    <div class="cv-downloads">
+      <h4>📎 Materiały do pobrania</h4>
+      <div class="cv-dl-item" onclick="downloadFile('zadania')">
+        <div class="cv-dl-icon">📄</div>
+        <div class="cv-dl-info">
+          <div class="dl-name">${lesson.title} — Zadania.pdf</div>
+          <div class="dl-size">PDF · 245 KB</div>
+        </div>
+        <div class="cv-dl-btn">Pobierz ↓</div>
+      </div>
+      <div class="cv-dl-item" onclick="downloadFile('rozwiazania')">
+        <div class="cv-dl-icon" style="background:rgba(52,211,153,0.1)">📝</div>
+        <div class="cv-dl-info">
+          <div class="dl-name">${lesson.title} — Rozwiązania.pdf</div>
+          <div class="dl-size">PDF · 380 KB</div>
+        </div>
+        <div class="cv-dl-btn">Pobierz ↓</div>
+      </div>
+    </div>
+    <button class="btn ${isDone ? 'btn-ghost' : 'btn-primary'} btn-full cv-complete-btn" onclick="toggleComplete()">
+      ${isDone ? '↩ Cofnij ukończenie' : '✓ Oznacz jako ukończone'}
+    </button>
+    ${state.currentLesson < mod.lessons.length - 1 ? `
+      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="selectLesson(${state.currentLesson + 1})">
+        Następna lekcja →
+      </button>
+    ` : ''}
+  `;
+}
+
+function toggleComplete() {
+  const mid = state.currentModule;
+  const lid = state.currentLesson;
+  if (!state.progress[mid]) state.progress[mid] = {};
+
+  if (state.progress[mid][lid]) {
+    delete state.progress[mid][lid];
+    showToast('Lekcja cofnięta');
+  } else {
+    state.progress[mid][lid] = true;
+    showToast('Lekcja ukończona! 🎉');
+  }
+  saveState();
+  renderCourse();
+}
+
+function playLesson() { showToast('Tu będzie odtwarzacz Vimeo z Twoim wideo!', 'success'); }
+function playDemo() { showToast('Tu osadzisz filmik demo z Vimeo!', 'success'); }
+function downloadFile(type) { showToast('PDF "' + type + '" gotowy do pobrania! (podłącz S3/Cloudinary)', 'success'); }
+
+// ═══════ LANDING DYNAMIC ═══════
+function renderLandingModules() {
+  document.getElementById('landingModules').innerHTML = COURSE_DATA.map(m => `
+    <div class="mod-item reveal">
+      <div class="mod-n">0${m.id}</div>
+      <div class="mod-info"><h4>${m.title}</h4><span>${m.desc}</span></div>
+      <div class="mod-tags"><span class="mod-tag">🎥 ${m.lessons.length} lekcji</span><span class="mod-tag">📄 PDF</span></div>
+    </div>
+  `).join('');
+}
+
+function renderFAQ() {
+  document.getElementById('faqContainer').innerHTML = FAQ_DATA.map(f => `
+    <div class="faq-i reveal">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ${f.q}<span class="faq-t">+</span>
+      </button>
+      <div class="faq-a">${f.a}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════ INIT ═══════
+function init() {
+  renderNav();
+  renderLandingModules();
+  renderFAQ();
+
+  // Scroll reveal observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  // Need to re-observe after rendering
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }, 100);
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.background =
+      window.scrollY > 40 ? 'rgba(7,7,13,0.92)' : 'rgba(7,7,13,0.75)';
+  });
+
+  // Close user menu on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.user-avatar')) {
+      const m = document.getElementById('userMenu');
+      if (m) m.classList.remove('open');
+    }
+  });
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => {
+      if (e.target === ov) ov.classList.remove('open');
+    });
+  });
+
+  // If user has course, allow direct dashboard access
+  if (state.user && state.user.hasCourse) {
+    // Stay on landing but nav shows dashboard option
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
