@@ -977,7 +977,7 @@ async function handleForgotPassword() {
 
   try {
     const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '?reset=true'
+      redirectTo: window.location.origin
     });
 
     if (error) throw error;
@@ -1016,6 +1016,7 @@ async function handleResetPassword() {
 
     closeModal('resetModal');
     showToast('Hasło zmienione! Możesz się teraz zalogować 🎉');
+    window.history.replaceState({}, '', window.location.pathname);
 
     // Clear
     document.getElementById('resetPass').value = '';
@@ -1030,25 +1031,7 @@ async function handleResetPassword() {
   }
 }
 
-// Sprawdź czy URL zawiera token resetu hasła
-function checkResetToken() {
-  const hash = window.location.hash;
-  const params = new URLSearchParams(window.location.search);
-
-  // Supabase dołącza token jako hash fragment
-  if (hash && hash.includes('type=recovery')) {
-    // Supabase automatycznie obsłuży sesję — otwórz modal zmiany hasła
-    setTimeout(() => openModal('resetModal'), 500);
-    // Wyczyść URL
-    window.history.replaceState({}, '', window.location.pathname);
-  }
-
-  // Alternatywnie, sprawdź query param
-  if (params.get('reset') === 'true' && hash.includes('access_token')) {
-    setTimeout(() => openModal('resetModal'), 500);
-    window.history.replaceState({}, '', window.location.pathname);
-  }
-}
+// Reset token jest obsługiwany przez onAuthStateChange → PASSWORD_RECOVERY
 
 // ═══════ SESSION RESTORE ═══════
 async function restoreSession() {
@@ -1083,6 +1066,10 @@ if (sb) {
       state.progress = {};
       renderNav();
       navigate('landing');
+    }
+    // Supabase przetworzyło token resetu — sesja recovery gotowa
+    if (event === 'PASSWORD_RECOVERY') {
+      openModal('resetModal');
     }
   });
 }
@@ -1452,9 +1439,6 @@ async function init() {
 
   // Sprawdź czy wracamy z Stripe (po płatności)
   await handlePaymentReturn();
-
-  // Sprawdź czy to link do resetu hasła
-  checkResetToken();
 
   // Scroll reveal observer
   const obs = new IntersectionObserver(entries => {
