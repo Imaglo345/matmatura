@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatMatura – Kurs Maturalny z Matematyki</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -571,6 +572,11 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 
 
 <script>
+// ═══════ SUPABASE CONFIG ═══════
+const SUPABASE_URL = 'https://ewkfbhlqfzlyezzemdhp.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3a2ZiaGxxZnpseWV6emVtZGhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzgyODYsImV4cCI6MjA5MDY1NDI4Nn0.0c4cfqRflRsO1jzUOwucgRG7NP1erFl_N5axIJVHdg4';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
 // ═══════ DATA ═══════
 const COURSE_DATA = [
   {
@@ -672,29 +678,20 @@ const FAQ_DATA = [
 
 // ═══════ STATE ═══════
 let state = {
-  user: null,        // {name, email, hasCourse}
+  user: null,        // {id, name, email, hasCourse}
   progress: {},      // {moduleId: {lessonIndex: true}}
   currentModule: null,
   currentLesson: 0,
-  payMethod: 'blik'
+  payMethod: 'blik',
+  loading: true
 };
-
-// Try restore state
-try {
-  const saved = sessionStorage.getItem('matmatura_state');
-  if (saved) state = JSON.parse(saved);
-} catch(e) {}
-
-function saveState() {
-  try { sessionStorage.setItem('matmatura_state', JSON.stringify(state)); } catch(e) {}
-}
 
 // ═══════ HELPERS ═══════
 function showToast(msg, type='success') {
   const t = document.getElementById('toast');
   t.className = 'toast show ' + type;
   t.innerHTML = (type === 'success' ? '✓' : '✕') + ' ' + msg;
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 
 function openModal(id) { document.getElementById(id).classList.add('open'); }
@@ -713,6 +710,45 @@ function getModuleProgress(moduleId) {
   return Math.round((done / mod.lessons.length) * 100);
 }
 
+function setButtonLoading(btn, loading) {
+  if (loading) {
+    btn.dataset.origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div>';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btn.dataset.origText || btn.innerHTML;
+  }
+}
+
+// ═══════ SUPABASE: LOAD PROFILE ═══════
+async function loadProfile(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('name, has_course, progress')
+      .eq('id', userId)
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (e) {
+    console.error('Błąd ładowania profilu:', e);
+    return null;
+  }
+}
+
+async function saveProgress() {
+  if (!state.user) return;
+  try {
+    await supabase
+      .from('profiles')
+      .update({ progress: state.progress })
+      .eq('id', state.user.id);
+  } catch (e) {
+    console.error('Błąd zapisu postępu:', e);
+  }
+}
+
 // ═══════ NAVIGATION ═══════
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -727,13 +763,13 @@ function navigate(page) {
 function renderNav() {
   const nr = document.getElementById('navRight');
   if (state.user) {
-    const initials = state.user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const initials = state.user.name ? state.user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : state.user.email[0].toUpperCase();
     nr.innerHTML = `
       <a class="nav-link" onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</a>
       <div class="user-avatar" onclick="this.querySelector('.user-menu').classList.toggle('open')">${initials}
         <div class="user-menu" id="userMenu">
           <div style="padding:12px 16px;border-bottom:1px solid var(--border);margin-bottom:4px">
-            <div style="font-weight:600;font-size:.9rem">${state.user.name}</div>
+            <div style="font-weight:600;font-size:.9rem">${state.user.name || 'Użytkownik'}</div>
             <div style="font-size:.78rem;color:var(--text-dim)">${state.user.email}</div>
           </div>
           <button class="user-menu-item" onclick="navigate('dashboard')">📊 Dashboard</button>
@@ -750,53 +786,157 @@ function renderNav() {
   }
 }
 
-// ═══════ AUTH ═══════
-function handleRegister() {
+// ═══════ AUTH — SUPABASE ═══════
+async function handleRegister() {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPass').value;
   const err = document.getElementById('regError');
+  const btn = document.getElementById('regBtn');
 
   if (!name || !email || !pass) { err.textContent='Wypełnij wszystkie pola'; err.style.display='block'; return; }
   if (pass.length < 6) { err.textContent='Hasło musi mieć min. 6 znaków'; err.style.display='block'; return; }
   if (!email.includes('@')) { err.textContent='Podaj prawidłowy email'; err.style.display='block'; return; }
 
   err.style.display = 'none';
-  state.user = { name, email, hasCourse: false };
-  saveState();
-  closeModal('registerModal');
-  showToast('Konto utworzone! Witaj, ' + name.split(' ')[0] + ' 🎉');
-  renderNav();
-  navigate('landing');
+  setButtonLoading(btn, true);
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: pass,
+      options: { data: { name } }
+    });
+
+    if (error) throw error;
+
+    const user = data.user;
+    const profile = await loadProfile(user.id);
+
+    state.user = {
+      id: user.id,
+      name: profile?.name || name,
+      email: user.email,
+      hasCourse: profile?.has_course || false
+    };
+    state.progress = profile?.progress || {};
+
+    closeModal('registerModal');
+    showToast('Konto utworzone! Witaj, ' + name.split(' ')[0] + ' 🎉');
+    renderNav();
+    navigate('landing');
+
+    // Clear form
+    document.getElementById('regName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPass').value = '';
+  } catch (e) {
+    console.error('Rejestracja error:', e);
+    if (e.message?.includes('already registered')) {
+      err.textContent = 'Konto z tym emailem już istnieje';
+    } else {
+      err.textContent = e.message || 'Coś poszło nie tak. Spróbuj ponownie.';
+    }
+    err.style.display = 'block';
+  } finally {
+    setButtonLoading(btn, false);
+  }
 }
 
-function handleLogin() {
+async function handleLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
+  const btn = document.getElementById('loginBtn');
 
   if (!email || !pass) { err.style.display='block'; err.textContent='Wypełnij wszystkie pola'; return; }
-  if (!state.user || state.user.email !== email) {
-    // Demo: auto-login with any credentials
-    state.user = { name: email.split('@')[0], email, hasCourse: false };
-  }
 
   err.style.display = 'none';
-  saveState();
-  closeModal('loginModal');
-  showToast('Zalogowano pomyślnie!');
-  renderNav();
-  if (state.user.hasCourse) navigate('dashboard');
+  setButtonLoading(btn, true);
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: pass
+    });
+
+    if (error) throw error;
+
+    const user = data.user;
+    const profile = await loadProfile(user.id);
+
+    state.user = {
+      id: user.id,
+      name: profile?.name || email.split('@')[0],
+      email: user.email,
+      hasCourse: profile?.has_course || false
+    };
+    state.progress = profile?.progress || {};
+
+    closeModal('loginModal');
+    showToast('Zalogowano pomyślnie!');
+    renderNav();
+
+    if (state.user.hasCourse) navigate('dashboard');
+
+    // Clear form
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPass').value = '';
+  } catch (e) {
+    console.error('Login error:', e);
+    err.textContent = 'Nieprawidłowy email lub hasło';
+    err.style.display = 'block';
+  } finally {
+    setButtonLoading(btn, false);
+  }
 }
 
-function handleLogout() {
+async function handleLogout() {
+  try {
+    await supabase.auth.signOut();
+  } catch (e) {
+    console.error('Logout error:', e);
+  }
   state.user = null;
   state.progress = {};
-  saveState();
   showToast('Wylogowano');
   navigate('landing');
   renderNav();
 }
+
+// ═══════ SESSION RESTORE ═══════
+async function restoreSession() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (session?.user) {
+      const user = session.user;
+      const profile = await loadProfile(user.id);
+
+      state.user = {
+        id: user.id,
+        name: profile?.name || user.user_metadata?.name || user.email.split('@')[0],
+        email: user.email,
+        hasCourse: profile?.has_course || false
+      };
+      state.progress = profile?.progress || {};
+      renderNav();
+    }
+  } catch (e) {
+    console.error('Session restore error:', e);
+  }
+  state.loading = false;
+}
+
+// Listen for auth state changes (tab switching, token refresh)
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_OUT') {
+    state.user = null;
+    state.progress = {};
+    renderNav();
+    navigate('landing');
+  }
+});
 
 // ═══════ PAYMENT ═══════
 function handleBuyClick() {
@@ -870,16 +1010,28 @@ function renderPayStep2() {
   `;
 }
 
-function processPayment() {
+async function processPayment() {
   const btn = document.getElementById('payBtn');
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div>';
 
-  setTimeout(() => {
+  try {
+    // Zapisz has_course = true w Supabase
+    const { error } = await supabase
+      .from('profiles')
+      .update({ has_course: true })
+      .eq('id', state.user.id);
+
+    if (error) throw error;
+
     state.user.hasCourse = true;
-    saveState();
     renderPaySuccess();
-  }, 2000);
+  } catch (e) {
+    console.error('Payment error:', e);
+    showToast('Błąd płatności. Spróbuj ponownie.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = 'Zapłać 199 zł';
+  }
 }
 
 function renderPaySuccess() {
@@ -893,7 +1045,6 @@ function renderPaySuccess() {
       <button class="btn btn-primary btn-full btn-lg" onclick="closeModal('payModal');navigate('dashboard')">Przejdź do kursu →</button>
     </div>
   `;
-  // Confetti!
   for (let i = 0; i < 20; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -911,12 +1062,13 @@ function renderPaySuccess() {
 function renderDashboard() {
   if (!state.user || !state.user.hasCourse) { navigate('landing'); return; }
 
-  document.getElementById('dashWelcome').textContent = `Cześć, ${state.user.name.split(' ')[0]}! 👋`;
+  const displayName = state.user.name || state.user.email.split('@')[0];
+  document.getElementById('dashWelcome').textContent = `Cześć, ${displayName.split(' ')[0]}! 👋`;
 
   const total = getTotalLessons();
   const done = getCompletedLessons();
   const pct = total > 0 ? Math.round((done/total)*100) : 0;
-  const hours = Math.round(done * 0.22); // ~13 min avg per lesson
+  const hours = Math.round(done * 0.22);
 
   document.getElementById('dsProgress').textContent = pct + '%';
   document.getElementById('dsBar').style.width = pct + '%';
@@ -946,7 +1098,6 @@ function renderDashboard() {
 function openModule(moduleId) {
   state.currentModule = moduleId;
   state.currentLesson = 0;
-  saveState();
   navigate('course');
 }
 
@@ -956,7 +1107,6 @@ function renderCourse() {
 
   document.getElementById('cvModuleTitle').textContent = `Moduł ${mod.id}: ${mod.title}`;
 
-  // Sidebar
   const sidebar = document.getElementById('cvSidebar');
   sidebar.innerHTML = `
     <div class="cv-sidebar-title">Lekcje (${mod.lessons.length})</div>
@@ -978,7 +1128,6 @@ function renderCourse() {
 
 function selectLesson(index) {
   state.currentLesson = index;
-  saveState();
   renderCourse();
 }
 
@@ -1031,25 +1180,28 @@ function renderLesson() {
   `;
 }
 
-function toggleComplete() {
+async function toggleComplete() {
   const mid = state.currentModule;
   const lid = state.currentLesson;
   if (!state.progress[mid]) state.progress[mid] = {};
 
   if (state.progress[mid][lid]) {
     delete state.progress[mid][lid];
+    if (Object.keys(state.progress[mid]).length === 0) delete state.progress[mid];
     showToast('Lekcja cofnięta');
   } else {
     state.progress[mid][lid] = true;
     showToast('Lekcja ukończona! 🎉');
   }
-  saveState();
+
+  // Zapisz postęp do Supabase
+  await saveProgress();
   renderCourse();
 }
 
 function playLesson() { showToast('Tu będzie odtwarzacz Vimeo z Twoim wideo!', 'success'); }
 function playDemo() { showToast('Tu osadzisz filmik demo z Vimeo!', 'success'); }
-function downloadFile(type) { showToast('PDF "' + type + '" gotowy do pobrania! (podłącz S3/Cloudinary)', 'success'); }
+function downloadFile(type) { showToast('PDF "' + type + '" — podłącz storage (S3/Cloudinary)', 'success'); }
 
 // ═══════ LANDING DYNAMIC ═══════
 function renderLandingModules() {
@@ -1074,16 +1226,18 @@ function renderFAQ() {
 }
 
 // ═══════ INIT ═══════
-function init() {
+async function init() {
   renderNav();
   renderLandingModules();
   renderFAQ();
+
+  // Przywróć sesję Supabase (auto-login jeśli sesja aktywna)
+  await restoreSession();
 
   // Scroll reveal observer
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
-  // Need to re-observe after rendering
   setTimeout(() => {
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }, 100);
@@ -1108,11 +1262,6 @@ function init() {
       if (e.target === ov) ov.classList.remove('open');
     });
   });
-
-  // If user has course, allow direct dashboard access
-  if (state.user && state.user.hasCourse) {
-    // Stay on landing but nav shows dashboard option
-  }
 }
 
 init();
