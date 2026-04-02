@@ -625,6 +625,20 @@ async function initSupabase() {
     if (window.supabase && window.supabase.createClient) {
       sb = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
       console.log('Supabase connected ✓');
+
+      // Nasłuchuj zmian auth NATYCHMIAST po utworzeniu klienta
+      sb.auth.onAuthStateChange(async (event, session) => {
+        console.log('Auth event:', event);
+        if (event === 'SIGNED_OUT') {
+          state.user = null;
+          state.progress = {};
+          renderNav();
+          navigate('landing');
+        }
+        if (event === 'PASSWORD_RECOVERY') {
+          openModal('resetModal');
+        }
+      });
     } else {
       console.warn('Supabase SDK not loaded — running in offline mode');
     }
@@ -1058,21 +1072,7 @@ async function restoreSession() {
   state.loading = false;
 }
 
-// Listen for auth state changes (tab switching, token refresh)
-if (sb) {
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_OUT') {
-      state.user = null;
-      state.progress = {};
-      renderNav();
-      navigate('landing');
-    }
-    // Supabase przetworzyło token resetu — sesja recovery gotowa
-    if (event === 'PASSWORD_RECOVERY') {
-      openModal('resetModal');
-    }
-  });
-}
+// Reset token jest obsługiwany przez onAuthStateChange → PASSWORD_RECOVERY (w initSupabase)
 
 // ═══════ PAYMENT — STRIPE CHECKOUT ═══════
 async function handleBuyClick() {
@@ -1431,7 +1431,7 @@ async function init() {
   renderLandingModules();
   renderFAQ();
 
-  // Połącz z Supabase (klucze z /api/config)
+  // Połącz z Supabase (klucze z /api/config + auth listener)
   await initSupabase();
 
   // Przywróć sesję Supabase (auto-login jeśli sesja aktywna)
