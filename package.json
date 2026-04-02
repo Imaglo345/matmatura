@@ -2,5 +2,8 @@
   "name": "matmatura",
   "version": "1.0.0",
   "description": "Kurs maturalny z matematyki",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "stripe": "^17.7.0"
+  }
 }

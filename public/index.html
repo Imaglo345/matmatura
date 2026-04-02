@@ -959,8 +959,8 @@ if (sb) {
   });
 }
 
-// ═══════ PAYMENT ═══════
-function handleBuyClick() {
+// ═══════ PAYMENT — STRIPE CHECKOUT ═══════
+async function handleBuyClick() {
   if (!state.user) {
     openModal('registerModal');
     return;
@@ -969,96 +969,116 @@ function handleBuyClick() {
     navigate('dashboard');
     return;
   }
-  renderPayStep1();
+
+  // Pokaż modal z podsumowaniem
+  document.getElementById('payContent').innerHTML = `
+    <h2>Kup dostęp</h2>
+    <p class="subtitle">Pełny kurs MatMatura — podstawa + rozszerzenie</p>
+    <div class="pay-summary">
+      <div class="pay-summary-row"><span>Kurs MatMatura (P+R)</span><span>199 zł</span></div>
+      <div class="pay-summary-row total"><span>Do zapłaty</span><span>199 zł</span></div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px">
+      <div style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Dostępne metody płatności:</div>
+      <div style="display:flex;gap:12px;font-size:.9rem">
+        <span>💳 Karta</span>
+        <span>📱 BLIK</span>
+        <span>🏦 Przelewy24</span>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" onclick="startStripeCheckout()" id="payBtn">Przejdź do płatności →</button>
+    <div class="guarantee" style="margin-top:16px">🔒 Bezpieczna płatność przez Stripe · 14-dniowa gwarancja zwrotu</div>
+  `;
   openModal('payModal');
 }
 
-function renderPayStep1() {
-  document.getElementById('payContent').innerHTML = `
-    <h2>Kup dostęp</h2>
-    <p class="subtitle">Wybierz metodę płatności</p>
-    <div class="pay-steps"><div class="pay-step active"></div><div class="pay-step"></div><div class="pay-step"></div></div>
-    <div class="pay-summary">
-      <div class="pay-summary-row"><span>Kurs MatMatura (P+R)</span><span>199 zł</span></div>
-      <div class="pay-summary-row" style="color:var(--green)"><span>Rabat startowy</span><span>-0 zł</span></div>
-      <div class="pay-summary-row total"><span>Do zapłaty</span><span>199 zł</span></div>
-    </div>
-    <div class="pay-methods">
-      <div class="pay-method ${state.payMethod==='blik'?'selected':''}" onclick="selectPay('blik')">
-        <div class="pay-method-radio"></div>
-        <div class="pay-method-name">📱 BLIK</div>
-      </div>
-      <div class="pay-method ${state.payMethod==='card'?'selected':''}" onclick="selectPay('card')">
-        <div class="pay-method-radio"></div>
-        <div class="pay-method-name">💳 Karta płatnicza</div>
-      </div>
-      <div class="pay-method ${state.payMethod==='p24'?'selected':''}" onclick="selectPay('p24')">
-        <div class="pay-method-radio"></div>
-        <div class="pay-method-name">🏦 Przelewy24</div>
-      </div>
-    </div>
-    <button class="btn btn-primary btn-full" onclick="renderPayStep2()">Dalej →</button>
-  `;
-}
-
-function selectPay(method) {
-  state.payMethod = method;
-  renderPayStep1();
-}
-
-function renderPayStep2() {
-  let fields = '';
-  if (state.payMethod === 'blik') {
-    fields = `<div class="form-group"><label>Kod BLIK</label><input type="text" id="payInput" placeholder="_ _ _ _ _ _" maxlength="6" style="text-align:center;font-family:'JetBrains Mono';font-size:1.4rem;letter-spacing:8px"></div>`;
-  } else if (state.payMethod === 'card') {
-    fields = `
-      <div class="form-group"><label>Numer karty</label><input type="text" id="payInput" placeholder="1234 5678 9012 3456" maxlength="19"></div>
-      <div style="display:flex;gap:12px">
-        <div class="form-group" style="flex:1"><label>Data ważności</label><input type="text" placeholder="MM/RR" maxlength="5"></div>
-        <div class="form-group" style="flex:1"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
-      </div>`;
-  } else {
-    fields = `<p style="text-align:center;color:var(--text-dim);padding:20px 0">Po kliknięciu zostaniesz przekierowany do Przelewy24</p>`;
-  }
-
-  document.getElementById('payContent').innerHTML = `
-    <h2>Płatność</h2>
-    <p class="subtitle">${state.payMethod==='blik'?'Wpisz kod BLIK':state.payMethod==='card'?'Dane karty':'Przelewy24'}</p>
-    <div class="pay-steps"><div class="pay-step done"></div><div class="pay-step active"></div><div class="pay-step"></div></div>
-    ${fields}
-    <button class="btn btn-primary btn-full" onclick="processPayment()" id="payBtn">Zapłać 199 zł</button>
-    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="renderPayStep1()">← Wróć</button>
-  `;
-}
-
-async function processPayment() {
+async function startStripeCheckout() {
   const btn = document.getElementById('payBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div>';
+  setButtonLoading(btn, true);
 
   try {
-    // Zapisz has_course = true w Supabase
-    const { error } = await sb
-      .from('profiles')
-      .update({ has_course: true })
-      .eq('id', state.user.id);
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: state.user.id,
+        userEmail: state.user.email
+      })
+    });
 
-    if (error) throw error;
+    const data = await res.json();
 
-    state.user.hasCourse = true;
-    renderPaySuccess();
+    if (!res.ok || !data.url) {
+      throw new Error(data.error || 'Nie udało się utworzyć sesji');
+    }
+
+    // Przekieruj na stronę Stripe
+    window.location.href = data.url;
+
   } catch (e) {
-    console.error('Payment error:', e);
-    showToast('Błąd płatności. Spróbuj ponownie.', 'error');
-    btn.disabled = false;
-    btn.innerHTML = 'Zapłać 199 zł';
+    console.error('Checkout error:', e);
+    showToast('Błąd: ' + e.message, 'error');
+    setButtonLoading(btn, false);
+  }
+}
+
+// Obsługa powrotu z Stripe (success/cancel)
+async function handlePaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  const sessionId = params.get('session_id');
+
+  if (!payment) return;
+
+  // Wyczyść URL
+  window.history.replaceState({}, '', window.location.pathname);
+
+  if (payment === 'cancelled') {
+    showToast('Płatność anulowana', 'error');
+    return;
+  }
+
+  if (payment === 'success' && sessionId) {
+    // Zweryfikuj płatność na serwerze
+    showToast('Weryfikuję płatność...');
+
+    try {
+      const res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Weryfikacja nie powiodła się');
+      }
+
+      // Odśwież profil
+      if (state.user) {
+        state.user.hasCourse = true;
+        const profile = await loadProfile(state.user.id);
+        if (profile) {
+          state.progress = profile.progress || {};
+        }
+      }
+
+      // Pokaż sukces
+      renderPaySuccess();
+      openModal('payModal');
+
+    } catch (e) {
+      console.error('Verify error:', e);
+      showToast('Płatność otrzymana! Odśwież stronę za chwilę.', 'success');
+      // Nawet jeśli weryfikacja się nie powiodła, Stripe webhook to naprawi
+    }
   }
 }
 
 function renderPaySuccess() {
   const modal = document.getElementById('payContent');
   modal.innerHTML = `
-    <div class="pay-steps"><div class="pay-step done"></div><div class="pay-step done"></div><div class="pay-step done" style="background:var(--green)"></div></div>
     <div style="position:relative;padding:20px 0">
       <div class="success-icon">✓</div>
       <h2 style="text-align:center">Płatność udana! 🎉</h2>
@@ -1257,6 +1277,9 @@ async function init() {
 
   // Przywróć sesję Supabase (auto-login jeśli sesja aktywna)
   await restoreSession();
+
+  // Sprawdź czy wracamy z Stripe (po płatności)
+  await handlePaymentReturn();
 
   // Scroll reveal observer
   const obs = new IntersectionObserver(entries => {
