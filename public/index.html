@@ -1193,19 +1193,19 @@ function renderLesson() {
     <div class="cv-lesson-desc">${lesson.desc}</div>
     <div class="cv-downloads">
       <h4>📎 Materiały do pobrania</h4>
-      <div class="cv-dl-item" onclick="downloadFile('zadania')">
+      <div class="cv-dl-item" onclick="downloadFile('modul-${mod.id}/lekcja-${state.currentLesson + 1}-zadania.pdf', this)">
         <div class="cv-dl-icon">📄</div>
         <div class="cv-dl-info">
           <div class="dl-name">${lesson.title} — Zadania.pdf</div>
-          <div class="dl-size">PDF · 245 KB</div>
+          <div class="dl-size">PDF</div>
         </div>
         <div class="cv-dl-btn">Pobierz ↓</div>
       </div>
-      <div class="cv-dl-item" onclick="downloadFile('rozwiazania')">
+      <div class="cv-dl-item" onclick="downloadFile('modul-${mod.id}/lekcja-${state.currentLesson + 1}-rozwiazania.pdf', this)">
         <div class="cv-dl-icon" style="background:rgba(52,211,153,0.1)">📝</div>
         <div class="cv-dl-info">
           <div class="dl-name">${lesson.title} — Rozwiązania.pdf</div>
-          <div class="dl-size">PDF · 380 KB</div>
+          <div class="dl-size">PDF</div>
         </div>
         <div class="cv-dl-btn">Pobierz ↓</div>
       </div>
@@ -1242,7 +1242,51 @@ async function toggleComplete() {
 
 function playLesson() { showToast('Tu będzie odtwarzacz Vimeo z Twoim wideo!', 'success'); }
 function playDemo() { showToast('Tu osadzisz filmik demo z Vimeo!', 'success'); }
-function downloadFile(type) { showToast('PDF "' + type + '" — podłącz storage (S3/Cloudinary)', 'success'); }
+
+async function downloadFile(filePath, element) {
+  if (!sb) { showToast('Serwer niedostępny', 'error'); return; }
+
+  // Zmień przycisk na ładowanie
+  const btn = element.querySelector('.cv-dl-btn');
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Pobieram...';
+
+  try {
+    // Pobierz token sesji
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { showToast('Zaloguj się ponownie', 'error'); return; }
+
+    // Wywołaj API serwera po podpisany URL
+    const res = await fetch('/api/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filePath,
+        accessToken: session.access_token
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Nie udało się pobrać pliku');
+    }
+
+    // Otwórz PDF w nowej karcie
+    window.open(data.url, '_blank');
+    showToast('PDF gotowy do pobrania!');
+
+  } catch (e) {
+    console.error('Download error:', e);
+    if (e.message.includes('nie znaleziony') || e.message.includes('404')) {
+      showToast('PDF jeszcze nie dodany do tego modułu', 'error');
+    } else {
+      showToast(e.message, 'error');
+    }
+  } finally {
+    btn.textContent = origText;
+  }
+}
 
 // ═══════ LANDING DYNAMIC ═══════
 function renderLandingModules() {
