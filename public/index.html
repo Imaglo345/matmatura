@@ -573,19 +573,23 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 
 <script>
 // ═══════ SUPABASE CONFIG ═══════
-const SUPABASE_URL = 'https://ewkfbhlqfzlyezzemdhp.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3a2ZiaGxxZnpseWV6emVtZGhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzgyODYsImV4cCI6MjA5MDY1NDI4Nn0.0c4cfqRflRsO1jzUOwucgRG7NP1erFl_N5axIJVHdg4';
-
 let sb = null;
-try {
-  if (window.supabase && window.supabase.createClient) {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    console.log('Supabase connected ✓');
-  } else {
-    console.warn('Supabase SDK not loaded — running in offline mode');
+
+async function initSupabase() {
+  try {
+    const res = await fetch('/api/config');
+    if (!res.ok) throw new Error('Config fetch failed');
+    const config = await res.json();
+
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+      console.log('Supabase connected ✓');
+    } else {
+      console.warn('Supabase SDK not loaded — running in offline mode');
+    }
+  } catch(e) {
+    console.error('Supabase init error:', e);
   }
-} catch(e) {
-  console.error('Supabase init error:', e);
 }
 
 // ═══════ DATA ═══════
@@ -1247,6 +1251,9 @@ async function init() {
   renderNav();
   renderLandingModules();
   renderFAQ();
+
+  // Połącz z Supabase (klucze z /api/config)
+  await initSupabase();
 
   // Przywróć sesję Supabase (auto-login jeśli sesja aktywna)
   await restoreSession();
