@@ -225,34 +225,97 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 .dash-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:3px;transition:width .6s ease}
 .dash-modules{padding:0 40px 60px;max-width:1060px;margin:0 auto}
 .dash-modules h3{font-size:1.2rem;font-weight:700;margin-bottom:20px}
-.dm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.dm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:.3s;cursor:pointer}
-.dm-card:hover{border-color:var(--border-hover);transform:translateY(-2px)}
-.dm-card-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.dm-card-num{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--accent);opacity:.5}
-.dm-card h4{font-size:1.05rem;font-weight:600}
-.dm-card .dm-desc{font-size:.82rem;color:var(--text-dim);margin-bottom:14px}
-.dm-card-bottom{display:flex;align-items:center;justify-content:space-between}
-.dm-card-prog{font-size:.78rem;color:var(--text-dim)}
-.dm-card-prog b{color:var(--green)}
-.dm-card-bar{flex:1;height:4px;background:var(--surface3);border-radius:2px;margin-left:14px;overflow:hidden}
-.dm-card-fill{height:100%;background:var(--green);border-radius:2px;transition:width .6s}
+
+/* DASHBOARD SECTIONS */
+.dash-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:.3s}
+.dash-section:hover{border-color:var(--border-hover)}
+.dash-section-header{display:flex;align-items:center;gap:14px;padding:18px 24px;cursor:pointer;transition:.2s;user-select:none}
+.dash-section-header:hover{background:rgba(255,255,255,0.02)}
+.dash-section-num{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--accent);opacity:.5;min-width:32px}
+.dash-section-info{flex:1}
+.dash-section-info h4{font-size:1rem;font-weight:600;margin-bottom:2px}
+.dash-section-info span{font-size:.8rem;color:var(--text-dim)}
+.dash-section-progress{display:flex;align-items:center;gap:10px}
+.dash-section-pct{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent2);font-weight:600}
+.dash-section-bar{width:60px;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.dash-section-fill{height:100%;background:var(--green);border-radius:2px;transition:width .6s}
+.dash-section-toggle{font-size:1.1rem;color:var(--text-muted);transition:transform .3s}
+.dash-section.open .dash-section-toggle{transform:rotate(180deg)}
+.dash-section-chapters{max-height:0;overflow:hidden;transition:max-height .4s ease;background:var(--surface2)}
+.dash-section.open .dash-section-chapters{max-height:2000px}
+.dash-ch-item{display:flex;align-items:center;gap:12px;padding:10px 24px 10px 52px;cursor:pointer;transition:.2s;border-left:3px solid transparent}
+.dash-ch-item:hover{background:rgba(255,255,255,0.02)}
+.dash-ch-item.done{opacity:.65}
+.dash-ch-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:.2s}
+.dash-ch-item.done .dash-ch-check{background:var(--green);border-color:var(--green);color:#fff}
+.dash-ch-info{flex:1;min-width:0}
+.dash-ch-info .ch-title{font-size:.85rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-ch-info .ch-meta{font-size:.72rem;color:var(--text-dim);display:flex;gap:8px;align-items:center}
+.ch-type-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:50px;font-size:.68rem;font-weight:600}
+.ch-type-badge.pdf{background:rgba(248,113,113,0.1);color:var(--red)}
+.ch-type-badge.text{background:rgba(124,109,240,0.1);color:var(--accent2)}
+.ch-type-badge.zadania{background:rgba(251,191,36,0.1);color:var(--gold)}
+.ch-effort{display:inline-flex;gap:2px;font-size:.65rem}
+.ch-effort .dot{width:6px;height:6px;border-radius:50%;background:var(--text-muted)}
+.ch-effort .dot.active{background:var(--gold)}
+.ch-free-badge{font-size:.68rem;color:var(--green);font-weight:600}
 
 /* ═══════ COURSE VIEW ═══════ */
 .course-view{padding-top:70px}
-.cv-top{display:flex;align-items:center;gap:12px;padding:20px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
+.cv-top{display:flex;align-items:center;gap:12px;padding:16px 40px;border-bottom:1px solid var(--border);background:var(--surface);flex-wrap:wrap}
 .cv-back{padding:8px 16px;border-radius:8px;font-size:.85rem;color:var(--text-dim);transition:.2s;display:flex;align-items:center;gap:6px}
 .cv-back:hover{background:rgba(255,255,255,0.04);color:var(--text)}
 .cv-title{font-weight:600;font-size:1rem}
-.cv-layout{display:grid;grid-template-columns:1fr 320px;min-height:calc(100vh - 130px)}
+.cv-progress-counter{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent2)}
+.cv-layout{display:grid;grid-template-columns:340px 1fr;min-height:calc(100vh - 130px)}
 .cv-main{padding:32px 40px;overflow-y:auto;max-height:calc(100vh - 130px)}
-.cv-sidebar{background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 130px);padding:20px 0}
-.cv-video{aspect-ratio:16/9;background:var(--surface2);border-radius:var(--radius);overflow:hidden;margin-bottom:28px;position:relative;display:flex;align-items:center;justify-content:center}
-.cv-video .play-btn{width:68px;height:68px}
-.cv-video-title{font-size:.8rem;position:absolute;bottom:14px;left:14px;padding:6px 12px;background:rgba(0,0,0,0.6);border-radius:6px;color:var(--text-dim)}
-.cv-lesson-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;letter-spacing:-.5px}
-.cv-lesson-meta{font-size:.85rem;color:var(--text-dim);margin-bottom:24px;display:flex;gap:16px}
-.cv-lesson-desc{font-size:.95rem;color:var(--text-dim);line-height:1.7;margin-bottom:28px}
+.cv-sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 130px);padding:12px 0;order:-1}
+
+/* SIDEBAR SECTIONS */
+.cv-sidebar-counter{padding:12px 20px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent2);border-bottom:1px solid var(--border);margin-bottom:8px}
+.cv-section{border-bottom:1px solid var(--border)}
+.cv-section:last-child{border-bottom:none}
+.cv-section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:.2s;user-select:none;font-size:.85rem;font-weight:600}
+.cv-section-header:hover{background:rgba(255,255,255,0.02)}
+.cv-section-num{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent);opacity:.5;min-width:22px}
+.cv-section-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-section-count{font-size:.72rem;color:var(--text-dim);font-weight:400}
+.cv-section-arrow{font-size:.7rem;color:var(--text-muted);transition:transform .3s}
+.cv-section.open .cv-section-arrow{transform:rotate(90deg)}
+.cv-section-chapters{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.cv-section.open .cv-section-chapters{max-height:2000px}
+.cv-ch-item{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 38px;cursor:pointer;transition:.2s;border-left:3px solid transparent}
+.cv-ch-item:hover{background:rgba(255,255,255,0.02)}
+.cv-ch-item.active{background:rgba(124,109,240,0.06);border-left-color:var(--accent)}
+.cv-ch-item.done{opacity:.6}
+.cv-ch-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:.2s}
+.cv-ch-item.done .cv-ch-check{background:var(--green);border-color:var(--green);color:#fff}
+.cv-ch-item .cv-ch-title{font-size:.8rem;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-ch-item .cv-ch-type{font-size:.65rem;color:var(--text-dim);flex-shrink:0}
+.cv-ch-lock{font-size:.7rem;opacity:.5}
+
+/* MAIN CONTENT */
+.cv-content-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px;margin-bottom:28px;min-height:200px}
+.cv-content-area.text-content{line-height:1.8;font-size:.95rem;color:var(--text-dim)}
+.cv-content-area.pdf-content{display:flex;flex-direction:column;align-items:center;gap:20px;padding:48px 36px}
+.cv-content-area.zadania-content{padding:32px 36px}
+.cv-pdf-icon{width:80px;height:100px;background:linear-gradient(135deg,rgba(248,113,113,0.15),rgba(248,113,113,0.05));border:2px solid rgba(248,113,113,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.cv-pdf-label{font-size:1rem;font-weight:600;text-align:center}
+.cv-pdf-sublabel{font-size:.85rem;color:var(--text-dim);text-align:center}
+.cv-text-icon{width:80px;height:100px;background:linear-gradient(135deg,rgba(124,109,240,0.15),rgba(124,109,240,0.05));border:2px solid rgba(124,109,240,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.cv-zadania-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cv-zadania-icon{width:48px;height:48px;border-radius:12px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.cv-zadania-info h4{font-size:1rem;font-weight:600}
+.cv-zadania-info span{font-size:.82rem;color:var(--text-dim)}
+.cv-effort-display{display:flex;align-items:center;gap:6px;margin-bottom:20px}
+.cv-effort-label{font-size:.82rem;color:var(--text-dim)}
+.cv-effort-dots{display:flex;gap:3px}
+.cv-effort-dots .dot{width:8px;height:8px;border-radius:50%;background:var(--surface3)}
+.cv-effort-dots .dot.active{background:var(--gold)}
+
+.cv-chapter-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;letter-spacing:-.5px}
+.cv-chapter-meta{font-size:.85rem;color:var(--text-dim);margin-bottom:24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.cv-chapter-desc{font-size:.95rem;color:var(--text-dim);line-height:1.7;margin-bottom:28px}
 .cv-downloads h4{font-size:1rem;font-weight:600;margin-bottom:14px}
 .cv-dl-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;transition:.3s;cursor:pointer}
 .cv-dl-item:hover{border-color:var(--border-hover)}
@@ -262,15 +325,12 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 .cv-dl-info .dl-size{font-size:.75rem;color:var(--text-dim)}
 .cv-dl-btn{font-size:.8rem;color:var(--accent2);font-weight:600}
 .cv-complete-btn{margin-top:24px}
-.cv-sidebar-title{padding:0 20px 12px;font-size:.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
-.cv-lesson-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:.2s;border-left:3px solid transparent}
-.cv-lesson-item:hover{background:rgba(255,255,255,0.02)}
-.cv-lesson-item.active{background:rgba(124,109,240,0.06);border-left-color:var(--accent)}
-.cv-lesson-item.done{opacity:.7}
-.cv-lesson-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:.2s}
-.cv-lesson-item.done .cv-lesson-check{background:var(--green);border-color:var(--green);color:#fff}
-.cv-lesson-item .cv-l-title{font-size:.85rem;font-weight:500}
-.cv-lesson-item .cv-l-dur{font-size:.72rem;color:var(--text-dim)}
+
+/* NAV BUTTONS */
+.cv-nav-buttons{display:flex;gap:10px;margin-top:20px}
+.cv-nav-buttons .btn{flex:1}
+.cv-nav-prev{justify-content:flex-start}
+.cv-nav-next{justify-content:flex-end}
 
 /* PAYMENT STEPS */
 .pay-steps{display:flex;gap:8px;margin-bottom:24px}
@@ -294,14 +354,14 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 @keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(300px) rotate(720deg)}}
 
 /* RESPONSIVE */
-@media(max-width:900px){.cv-layout{grid-template-columns:1fr}.cv-sidebar{display:none}}
+@media(max-width:900px){.cv-layout{grid-template-columns:1fr}.cv-sidebar{display:none}.cv-main{max-height:none}}
 @media(max-width:768px){
   nav{padding:12px 18px}
   .nav-link{display:none}
   section{padding:60px 18px}
   .hero{padding:100px 18px 50px}
   .hero-stats{gap:20px}
-  .levels-grid,.feat-grid,.test-grid,.dm-grid{grid-template-columns:1fr}
+  .levels-grid,.feat-grid,.test-grid{grid-template-columns:1fr}
   .price-card{padding:28px 20px}
   .price-val{font-size:2.8rem}
   .dash-header,.dash-modules{padding-left:18px;padding-right:18px}
@@ -433,14 +493,14 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
     <div class="hero-content">
       <div class="badge"><span class="dot"></span> Matura 2026 – Nabór otwarty</div>
       <h1>Zdaj maturę z matmy<br><span class="gr">bez stresu i na swoich zasadach</span></h1>
-      <p class="hero-sub">Kompletny kurs z matematyki — podstawa i rozszerzenie. Wideo, zadania, rozwiązania. Kupujesz raz, masz dostęp na zawsze.</p>
+      <p class="hero-sub">Kompletny kurs z matematyki — podstawa i rozszerzenie. PDF-y, teksty, zadania z rozwiązaniami. Kupujesz raz, masz dostęp na zawsze.</p>
       <div class="hero-cta">
         <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">🎓 Kup dostęp — 199 zł</button>
         <a href="#demo-section" class="btn btn-ghost btn-lg">▶ Obejrzyj demo</a>
       </div>
       <div class="hero-stats">
-        <div class="stat"><div class="stat-n">120+</div><div class="stat-l">Lekcji wideo</div></div>
-        <div class="stat"><div class="stat-n">50+</div><div class="stat-l">PDF z zadaniami</div></div>
+        <div class="stat"><div class="stat-n">145+</div><div class="stat-l">Rozdziałów</div></div>
+        <div class="stat"><div class="stat-n">15</div><div class="stat-l">Sekcji tematycznych</div></div>
         <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Zdawalność</div></div>
         <div class="stat"><div class="stat-n">2500+</div><div class="stat-l">Kursantów</div></div>
       </div>
@@ -476,15 +536,15 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
   </section>
 
   <section style="background:var(--surface)" id="modules-section">
-    <div class="sec-title reveal"><div class="over">Program kursu</div><h2>6 modułów, pełne przygotowanie</h2><p>Każdy moduł = lekcje wideo + PDF z zadaniami + PDF z rozwiązaniami</p></div>
+    <div class="sec-title reveal"><div class="over">Program kursu</div><h2>15 sekcji, 145+ rozdziałów</h2><p>Każda sekcja = teoria w PDF + zadania z rozwiązaniami + materiały tekstowe</p></div>
     <div class="mod-wrap" id="landingModules"></div>
   </section>
 
   <section>
     <div class="sec-title reveal"><div class="over">Dlaczego my</div><h2>Kurs stworzony pod maturę</h2></div>
     <div class="feat-grid">
-      <div class="feat reveal"><span class="feat-e">🎥</span><h4>Nagrania wideo HD</h4><p>Każde zagadnienie wyjaśnione na ekranie, krok po kroku.</p></div>
-      <div class="feat reveal"><span class="feat-e">📄</span><h4>PDF z zadaniami</h4><p>Zadania wzorowane na maturze + pełne rozwiązania.</p></div>
+      <div class="feat reveal"><span class="feat-e">📄</span><h4>Teoria w PDF</h4><p>Każde zagadnienie wyjaśnione w przejrzystym PDF, krok po kroku.</p></div>
+      <div class="feat reveal"><span class="feat-e">✏️</span><h4>Zadania z rozwiązaniami</h4><p>Zadania wzorowane na maturze + pełne rozwiązania w PDF.</p></div>
       <div class="feat reveal"><span class="feat-e">♾️</span><h4>Dostęp na zawsze</h4><p>Jedna płatność — zero subskrypcji. Wracasz kiedy chcesz.</p></div>
       <div class="feat reveal"><span class="feat-e">📱</span><h4>Działa na telefonie</h4><p>Ucz się w autobusie, w łóżku. Responsywny design.</p></div>
       <div class="feat reveal"><span class="feat-e">📊</span><h4>Śledzenie postępu</h4><p>Widzisz co przerobione, co zostało. Motywacja na wyciągnięcie ręki.</p></div>
@@ -493,14 +553,15 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
   </section>
 
   <section class="demo-bg" id="demo-section">
-    <div class="sec-title reveal"><div class="over">Zobacz jak wygląda nauka</div><h2>Przykładowa lekcja</h2><p>Przekonaj się, zanim kupisz.</p></div>
+    <div class="sec-title reveal"><div class="over">Zobacz jak wygląda nauka</div><h2>Przykładowy rozdział</h2><p>Przekonaj się, zanim kupisz.</p></div>
     <div class="demo-player reveal">
       <div class="dp-top"><span class="dp-dot r"></span><span class="dp-dot y"></span><span class="dp-dot g"></span></div>
-      <div class="dp-body" id="demoVideo">
-        <button class="play-btn" onclick="playDemo()">
-          <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-        </button>
-        <div class="dp-label">Moduł 2 · Funkcja kwadratowa — wierzchołek paraboli</div>
+      <div class="dp-body" style="flex-direction:column;gap:16px;padding:40px">
+        <div style="font-size:3rem">📄</div>
+        <div style="font-size:1.1rem;font-weight:600;color:var(--text)">Funkcja kwadratowa — postaci</div>
+        <div style="font-size:.88rem;color:var(--text-dim);max-width:400px;text-align:center">Postać ogólna, kanoniczna, iloczynowa. Wzory na wierzchołek, deltę — wszystko w jednym przejrzystym PDF.</div>
+        <button class="btn btn-primary" onclick="playDemo()">Zobacz przykładowy PDF</button>
+        <div class="dp-label">Sekcja 4 · Funkcja kwadratowa</div>
       </div>
     </div>
   </section>
@@ -513,8 +574,8 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
         <div class="price-val">199 zł <span>jednorazowo</span></div>
         <div class="price-note">Pełny kurs: podstawa + rozszerzenie</div>
         <ul class="price-features">
-          <li><span class="pf">✓</span> 120+ lekcji wideo</li>
-          <li><span class="pf">✓</span> 50+ PDF z zadaniami i rozwiązaniami</li>
+          <li><span class="pf">✓</span> 145+ rozdziałów z teorią i zadaniami</li>
+          <li><span class="pf">✓</span> PDF-y z zadaniami i rozwiązaniami</li>
           <li><span class="pf">✓</span> Poziom podstawowy + rozszerzony</li>
           <li><span class="pf">✓</span> Dostęp na zawsze</li>
           <li><span class="pf">✓</span> Arkusze maturalne z omówieniem</li>
@@ -581,8 +642,8 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
           <div class="dash-progress-bar"><div class="dash-progress-fill" id="dsBar" style="width:0%"></div></div>
         </div>
         <div class="dash-stat">
-          <div class="ds-val" id="dsCompleted">0/100</div>
-          <div class="ds-lab">Ukończone lekcje</div>
+          <div class="ds-val" id="dsCompleted">0/145</div>
+          <div class="ds-lab">Ukończone rozdziały</div>
         </div>
         <div class="dash-stat">
           <div class="ds-val" id="dsTime">0h</div>
@@ -591,8 +652,8 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
       </div>
     </div>
     <div class="dash-modules">
-      <h3>Moduły kursu</h3>
-      <div class="dm-grid" id="dashModules"></div>
+      <h3>Sekcje kursu</h3>
+      <div id="dashSections"></div>
     </div>
   </div>
 </div>
@@ -603,10 +664,11 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
     <div class="cv-top">
       <button class="cv-back" onclick="navigate('dashboard')">← Wróć do dashboardu</button>
       <div class="cv-title" id="cvModuleTitle"></div>
+      <div class="cv-progress-counter" id="cvProgressCounter"></div>
     </div>
     <div class="cv-layout">
-      <div class="cv-main" id="cvMain"></div>
       <div class="cv-sidebar" id="cvSidebar"></div>
+      <div class="cv-main" id="cvMain"></div>
     </div>
   </div>
 </div>
@@ -650,89 +712,225 @@ async function initSupabase() {
 // ═══════ DATA ═══════
 const COURSE_DATA = [
   {
-    id: 1, title: "Liczby i działania", desc: "Potęgi, pierwiastki, logarytmy, procenty",
-    lessons: [
-      {title:"Potęgi i ich własności",dur:"12:30",desc:"Poznasz zasady mnożenia, dzielenia i potęgowania potęg. Nauczysz się upraszczać wyrażenia z potęgami."},
-      {title:"Pierwiastki",dur:"10:15",desc:"Działania na pierwiastkach, usuwanie niewymierności z mianownika."},
-      {title:"Logarytmy — wprowadzenie",dur:"14:00",desc:"Definicja logarytmu, podstawowe własności, zmiana podstawy."},
-      {title:"Logarytmy — zadania maturalne",dur:"18:20",desc:"Rozwiązywanie typowych zadań maturalnych z logarytmami."},
-      {title:"Procenty i punkty procentowe",dur:"11:45",desc:"Obliczenia procentowe, podwyżki, obniżki, VAT."},
-      {title:"Notacja wykładnicza",dur:"8:30",desc:"Zapis liczb w postaci a × 10^n, działania."},
-      {title:"Liczby wymierne i niewymierne",dur:"9:00",desc:"Rozróżnianie, dowodzenie niewymierności."},
-      {title:"Wartość bezwzględna",dur:"13:10",desc:"Definicja, własności, równania i nierówności z wartością bezwzględną."},
-      {title:"Działania na zbiorach liczbowych",dur:"10:00",desc:"Zbiory, przedziały, operacje na zbiorach."},
-      {title:"Powtórka i zadania",dur:"15:00",desc:"Zadania podsumowujące cały moduł."},
+    id: 1, title: "Wstęp", chapters: [
+      {title:"Wstęp do kursu",type:"text",desc:"Wprowadzenie do kursu — jak się uczyć, czego się spodziewać, jak korzystać z materiałów.",free:true},
+      {title:"Mindset",type:"text",desc:"Nastawienie do nauki matematyki. Jak podejść do przygotowań, żeby nie wypalić się przed maturą.",free:true},
+      {title:"Narzędzia do nauki",type:"text",desc:"Przegląd narzędzi: kalkulator, GeoGebra, Wolfram Alpha — co wolno na maturze, co pomaga w nauce.",free:true},
+      {title:"Struktura arkusza maturalnego",type:"pdf",desc:"Omówienie budowy arkusza CKE — zadania zamknięte, otwarte, punktacja, czas."},
+      {title:"Symbole i znaczki matematyczne",type:"pdf",desc:"Kompendium symboli matematycznych używanych w arkuszach i podręcznikach."},
+      {title:"Quiz: Wstęp",type:"zadania",desc:"Sprawdź swoją wiedzę wstępną — krótki test diagnostyczny.",effort:1,questions:5},
     ]
   },
   {
-    id: 2, title: "Funkcje", desc: "Liniowa, kwadratowa, wykładnicza, logarytmiczna",
-    lessons: [
-      {title:"Pojęcie funkcji",dur:"11:00",desc:"Definicja, dziedzina, zbiór wartości, odczytywanie z wykresu."},
-      {title:"Funkcja liniowa",dur:"13:20",desc:"Wzór, wykres, współczynnik kierunkowy, miejsce zerowe."},
-      {title:"Funkcja kwadratowa — wzory",dur:"15:30",desc:"Postać ogólna, kanoniczna, iloczynowa. Delta."},
-      {title:"Funkcja kwadratowa — wykres",dur:"14:00",desc:"Rysowanie paraboli, wierzchołek, oś symetrii."},
-      {title:"Funkcja kwadratowa — zadania",dur:"18:00",desc:"Nierówności kwadratowe, zadania optymalizacyjne."},
-      {title:"Funkcja wykładnicza",dur:"12:00",desc:"Wykres, własności, równania i nierówności wykładnicze."},
-      {title:"Funkcja logarytmiczna",dur:"13:00",desc:"Wykres, własności, równania logarytmiczne."},
-      {title:"Przekształcenia wykresów",dur:"16:00",desc:"Przesunięcia, odbicia, skalowanie."},
-      {title:"Funkcja wielomianowa",dur:"14:30",desc:"Wielomiany, dzielenie, schemat Hornera."},
-      {title:"Zadania maturalne — funkcje",dur:"20:00",desc:"Komplet zadań z arkuszy CKE."},
+    id: 2, title: "Wielomiany", chapters: [
+      {title:"Wyrażenia algebraiczne",type:"text",desc:"Podstawy algebry — upraszczanie wyrażeń, kolejność działań."},
+      {title:"Wyrażenia algebraiczne — zadania",type:"zadania",desc:"Zestaw zadań z upraszczania wyrażeń algebraicznych.",effort:1,questions:10},
+      {title:"Wzory skróconego mnożenia",type:"pdf",desc:"Kwadrat sumy, kwadrat różnicy, różnica kwadratów, sześciany — wzory i dowody."},
+      {title:"Wzory skróconego mnożenia — zadania",type:"zadania",desc:"Zadania utrwalające wzory skróconego mnożenia.",effort:1,questions:15},
+      {title:"Wielomiany",type:"pdf",desc:"Definicja wielomianu, stopień, współczynniki, wartość wielomianu."},
+      {title:"Wielomiany — zadania",type:"zadania",desc:"Zadania z wielomianami — obliczanie wartości, porównywanie.",effort:1,questions:8},
+      {title:"Dzielenie wielomianów",type:"pdf",desc:"Dzielenie wielomianów przez dwumian, algorytm dzielenia."},
+      {title:"Dzielenie wielomianów — zadania",type:"zadania",desc:"Zadania z dzielenia wielomianów.",effort:2,questions:8},
+      {title:"Twierdzenie Bézout'a",type:"pdf",desc:"Twierdzenie o reszcie z dzielenia wielomianu, zastosowania."},
+      {title:"Twierdzenie o pierwiastkach wymiernych",type:"pdf",desc:"Jak znajdować pierwiastki wymierne wielomianu."},
+      {title:"Schemat Hornera",type:"pdf",desc:"Szybkie dzielenie wielomianów i obliczanie wartości metodą Hornera."},
+      {title:"Schemat Hornera — zadania",type:"zadania",desc:"Zadania z zastosowaniem schematu Hornera.",effort:2,questions:6},
+      {title:"Rozkład wielomianu na czynniki",type:"pdf",desc:"Metody rozkładu: wyciąganie przed nawias, grupowanie, wzory skróconego mnożenia."},
+      {title:"Rozkład wielomianu — zadania",type:"zadania",desc:"Zadania z rozkładu wielomianów na czynniki.",effort:2,questions:10},
+      {title:"Nierówności wielomianowe",type:"pdf",desc:"Rozwiązywanie nierówności wielomianowych metodą przedziałów."},
+      {title:"Nierówności wielomianowe — zadania",type:"zadania",desc:"Zestaw zadań z nierówności wielomianowych.",effort:2,questions:10},
+      {title:"Układy równań",type:"pdf",desc:"Układy równań liniowych i nieliniowych — metody rozwiązywania."},
+      {title:"Trudniejsze układy równań",type:"pdf",desc:"Układy z parametrem, układy trzech równań."},
+      {title:"Układy równań — zadania",type:"zadania",desc:"Zadania z układów równań różnego typu.",effort:2,questions:8},
+      {title:"Wielomiany — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z działu wielomianów.",effort:3,questions:12},
     ]
   },
   {
-    id: 3, title: "Trygonometria", desc: "Funkcje trygonometryczne, tożsamości, równania",
-    lessons: [
-      {title:"Kąty i ich miary",dur:"10:00",desc:"Stopnie, radiany, zamiana jednostek."},
-      {title:"Sinus, cosinus, tangens",dur:"14:00",desc:"Definicje w trójkącie prostokątnym i na okręgu."},
-      {title:"Wartości funkcji trygonometrycznych",dur:"12:30",desc:"Kąty: 30°, 45°, 60°, 90° i ich wielokrotności."},
-      {title:"Tożsamości trygonometryczne",dur:"16:00",desc:"Jedynka trygonometryczna, wzory redukcyjne."},
-      {title:"Równania trygonometryczne",dur:"18:00",desc:"Rozwiązywanie równań z sin, cos, tg."},
-      {title:"Twierdzenie sinusów",dur:"13:00",desc:"Dowód, zastosowania, zadania."},
-      {title:"Twierdzenie cosinusów",dur:"13:30",desc:"Dowód, zastosowania, zadania."},
-      {title:"Funkcje trygonometryczne — wykresy",dur:"15:00",desc:"Wykresy sin, cos, tg — okres, amplituda, przesunięcia."},
-      {title:"Zadania maturalne — trygonometria",dur:"20:00",desc:"Arkusze CKE z pełnym omówieniem."},
+    id: 3, title: "Wartość bezwzględna", chapters: [
+      {title:"Wartość bezwzględna",type:"pdf",desc:"Definicja, interpretacja geometryczna, własności, równania i nierówności z wartością bezwzględną."},
+      {title:"Wartość bezwzględna — zadania",type:"zadania",desc:"Zadania z równaniami i nierównościami z wartością bezwzględną.",effort:2,questions:10},
     ]
   },
   {
-    id: 4, title: "Geometria", desc: "Planimetria, stereometria, geometria analityczna",
-    lessons: [
-      {title:"Kąty i wielokąty",dur:"11:00",desc:"Kąty w trójkącie, czworokącie, wielokącie foremnym."},
-      {title:"Trójkąty — własności i pola",dur:"14:00",desc:"Rodzaje trójkątów, wzory na pole, wysokości."},
-      {title:"Okrąg i koło",dur:"13:00",desc:"Obwód, pole, kąty wpisane i środkowe."},
-      {title:"Czworokąty",dur:"12:30",desc:"Prostokąt, romb, trapez, równoległobok."},
-      {title:"Podobieństwo i skala",dur:"11:00",desc:"Cechy podobieństwa, skala, zastosowania."},
-      {title:"Geometria analityczna — proste",dur:"15:00",desc:"Równanie prostej, odległość punktu od prostej."},
-      {title:"Geometria analityczna — okrąg",dur:"14:00",desc:"Równanie okręgu, wzajemne położenie."},
-      {title:"Stereometria — graniastosłupy",dur:"16:00",desc:"Objętość, pole powierzchni, przekroje."},
-      {title:"Stereometria — ostrosłupy",dur:"15:30",desc:"Objętość, pole, kąty dwuścienne."},
-      {title:"Bryły obrotowe",dur:"14:00",desc:"Walec, stożek, kula — wzory, zadania."},
-      {title:"Zadania maturalne — geometria",dur:"22:00",desc:"Komplet zadań geometrycznych z CKE."},
+    id: 4, title: "Funkcja kwadratowa", chapters: [
+      {title:"Przypomnienie — funkcja liniowa",type:"pdf",desc:"Wzór, wykres, współczynnik kierunkowy, miejsce zerowe."},
+      {title:"Funkcja kwadratowa — postaci",type:"pdf",desc:"Postać ogólna, kanoniczna, iloczynowa. Wzory na wierzchołek, deltę."},
+      {title:"Funkcja kwadratowa — wykres",type:"pdf",desc:"Rysowanie paraboli, wierzchołek, oś symetrii, ramiona."},
+      {title:"Funkcja kwadratowa — zadania",type:"zadania",desc:"Zadania z funkcji kwadratowej — odczytywanie, rysowanie, wzory.",effort:1,questions:10},
+      {title:"Rozkład kwadratowy",type:"pdf",desc:"Rozkładanie trójmianu kwadratowego na czynniki liniowe."},
+      {title:"Funkcja dwukwadratowa",type:"pdf",desc:"Równania dwukwadratowe — metoda podstawiania."},
+      {title:"Funkcja kwadratowa z parametrem",type:"pdf",desc:"Zadania z parametrem — warunki na pierwiastki, znaki, położenie wierzchołka."},
+      {title:"Funkcja kwadratowa — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z funkcji kwadratowej.",effort:3,questions:12},
     ]
   },
   {
-    id: 5, title: "Statystyka i prawdopodobieństwo", desc: "Kombinatoryka, rozkłady, analiza danych",
-    lessons: [
-      {title:"Średnia, mediana, moda",dur:"10:00",desc:"Miary tendencji centralnej, interpretacja."},
-      {title:"Odchylenie standardowe",dur:"11:00",desc:"Obliczanie i interpretacja rozrzutu danych."},
-      {title:"Permutacje i kombinacje",dur:"14:00",desc:"Symbol Newtona, silnia, zliczanie."},
-      {title:"Prawdopodobieństwo klasyczne",dur:"12:00",desc:"Definicja, zdarzenia, drzewo zdarzeń."},
-      {title:"Prawdopodobieństwo warunkowe",dur:"13:30",desc:"Wzór Bayesa, niezależność zdarzeń."},
-      {title:"Rozkład dwumianowy",dur:"15:00",desc:"Schemat Bernoulliego, zastosowania."},
-      {title:"Zadania maturalne — statystyka",dur:"18:00",desc:"Typowe zadania z arkuszy CKE."},
+    id: 5, title: "Dowody algebraiczne", chapters: [
+      {title:"Dowody algebraiczne — wprowadzenie",type:"text",desc:"Jak zapisywać dowody, typowe techniki, parzystość, podzielność."},
+      {title:"Dowody algebraiczne — zadania",type:"zadania",desc:"Zadania dowodowe — parzystość, podzielność, nierówności.",effort:2,questions:8},
+      {title:"Nierówność między średnimi",type:"pdf",desc:"Średnia arytmetyczna ≥ geometryczna, zastosowania w dowodach i optymalizacji."},
+      {title:"Nierówność między średnimi — zadania",type:"zadania",desc:"Zadania wykorzystujące zależności między średnimi.",effort:3,questions:6},
+      {title:"Podzielność",type:"pdf",desc:"Dowody podzielności, reszty z dzielenia, arytmetyka modularna."},
+      {title:"Podzielność — zadania",type:"zadania",desc:"Zadania dowodowe z podzielności.",effort:3,questions:10},
     ]
   },
   {
-    id: 6, title: "Zadania maturalne", desc: "Pełne arkusze z omówieniem krok po kroku",
-    lessons: [
-      {title:"Arkusz próbny CKE 2024 — cz. 1",dur:"25:00",desc:"Zadania zamknięte — pełne omówienie."},
-      {title:"Arkusz próbny CKE 2024 — cz. 2",dur:"28:00",desc:"Zadania otwarte — rozwiązania krok po kroku."},
-      {title:"Arkusz maturalny 2023 — cz. 1",dur:"24:00",desc:"Zadania zamknięte z komentarzem."},
-      {title:"Arkusz maturalny 2023 — cz. 2",dur:"26:00",desc:"Zadania otwarte z pełnym rozwiązaniem."},
-      {title:"Arkusz maturalny 2022 — cz. 1",dur:"22:00",desc:"Zadania zamknięte z arkusza 2022."},
-      {title:"Arkusz maturalny 2022 — cz. 2",dur:"27:00",desc:"Zadania otwarte z arkusza 2022."},
-      {title:"Najczęstsze pułapki na maturze",dur:"18:00",desc:"Typowe błędy i jak ich unikać."},
-      {title:"Strategia rozwiązywania arkusza",dur:"15:00",desc:"Zarządzanie czasem, kolejność zadań."},
-      {title:"Symulacja matury — na czas",dur:"30:00",desc:"Pełny arkusz do rozwiązania w warunkach egzaminacyjnych."},
+    id: 6, title: "Funkcje wymierne", chapters: [
+      {title:"Funkcja homograficzna",type:"pdf",desc:"Postać y = (ax+b)/(cx+d), asymptoty, wykres, dziedzina."},
+      {title:"Funkcja homograficzna — zadania",type:"zadania",desc:"Zadania z funkcją homograficzną.",effort:2,questions:7},
+      {title:"Nierówności wymierne",type:"pdf",desc:"Rozwiązywanie nierówności z ułamkami algebraicznymi."},
+      {title:"Nierówności wymierne — zadania",type:"zadania",desc:"Zestaw zadań z nierówności wymiernych.",effort:2,questions:8},
+    ]
+  },
+  {
+    id: 7, title: "Logarytmy i funkcje wykładnicze", chapters: [
+      {title:"Potęgi i pierwiastki",type:"pdf",desc:"Działania na potęgach i pierwiastkach, własności, upraszczanie."},
+      {title:"Potęgi i pierwiastki — zadania",type:"zadania",desc:"Zadania z potęgami i pierwiastkami.",effort:1,questions:12},
+      {title:"Logarytmy",type:"pdf",desc:"Definicja, własności logarytmów, zmiana podstawy."},
+      {title:"Logarytmy — zadania",type:"zadania",desc:"Zadania z logarytmami — upraszczanie, obliczanie.",effort:2,questions:14},
+      {title:"Funkcja wykładnicza",type:"pdf",desc:"Wykres, własności, równania i nierówności wykładnicze."},
+      {title:"Równania wykładnicze",type:"pdf",desc:"Techniki rozwiązywania równań wykładniczych."},
+      {title:"Równania wykładnicze — zadania",type:"zadania",desc:"Zadania z równaniami wykładniczymi.",effort:2,questions:8},
+      {title:"Funkcja logarytmiczna",type:"pdf",desc:"Wykres, własności, dziedzina, przekształcenia."},
+      {title:"Równania logarytmiczne",type:"pdf",desc:"Techniki rozwiązywania równań logarytmicznych."},
+      {title:"Równania logarytmiczne — zadania maturalne",type:"zadania",desc:"Zadania maturalne z funkcjami wykładniczymi i logarytmicznymi.",effort:3,questions:10},
+    ]
+  },
+  {
+    id: 8, title: "Ciągi i szeregi", chapters: [
+      {title:"Ciągi — definicja i własności",type:"pdf",desc:"Ciąg liczbowy, monotoniczność, ograniczoność, ciągi rekurencyjne."},
+      {title:"Ciąg arytmetyczny",type:"pdf",desc:"Wzór na n-ty wyraz, suma n wyrazów, własności."},
+      {title:"Ciąg geometryczny",type:"pdf",desc:"Wzór na n-ty wyraz, suma n wyrazów, iloraz."},
+      {title:"Ciągi — zadania",type:"zadania",desc:"Zadania z ciągami arytmetycznymi i geometrycznymi.",effort:2,questions:10},
+      {title:"Szeregi geometryczne",type:"pdf",desc:"Suma szeregu geometrycznego, zbieżność, zastosowania."},
+      {title:"Ciągi i szeregi — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z ciągów.",effort:3,questions:10},
+    ]
+  },
+  {
+    id: 9, title: "Trygonometria", chapters: [
+      {title:"Kąty i radiany",type:"pdf",desc:"Miara stopniowa i łukowa, zamiana, kąty skierowane."},
+      {title:"Sinus, cosinus, tangens",type:"pdf",desc:"Definicje w trójkącie prostokątnym i na okręgu jednostkowym."},
+      {title:"Wykresy funkcji trygonometrycznych",type:"pdf",desc:"Wykresy sin, cos, tg — okres, amplituda, przesunięcia fazowe."},
+      {title:"Tożsamości trygonometryczne",type:"pdf",desc:"Jedynka trygonometryczna, wzory redukcyjne, dodawanie kątów."},
+      {title:"Tożsamości — zadania",type:"zadania",desc:"Zadania z tożsamościami trygonometrycznymi.",effort:2,questions:7},
+      {title:"Równania trygonometryczne",type:"pdf",desc:"Rozwiązywanie równań z sin, cos, tg — metody i techniki."},
+      {title:"Równania trygonometryczne — zadania",type:"zadania",desc:"Zadania z równaniami trygonometrycznymi.",effort:3,questions:8},
+      {title:"Trygonometria — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z trygonometrii.",effort:3,questions:10},
+    ]
+  },
+  {
+    id: 10, title: "Analiza matematyczna", chapters: [
+      {title:"Granice ciągów — wstęp",type:"pdf",desc:"Definicja granicy ciągu, granice właściwe i niewłaściwe."},
+      {title:"Granice ciągów — proste",type:"pdf",desc:"Obliczanie granic prostych ciągów, twierdzenia o granicach."},
+      {title:"Granice ciągów — trudniejsze",type:"pdf",desc:"Granice z symbolem nieoznaczonym, wyrażenia wymierne, pierwiastki."},
+      {title:"Granice ciągów — zadania",type:"zadania",desc:"Zadania z granic ciągów.",effort:2,questions:10},
+      {title:"Twierdzenie o trzech ciągach",type:"pdf",desc:"Twierdzenie o trzech ciągach (sandwich theorem) i zastosowania."},
+      {title:"Granice funkcji",type:"pdf",desc:"Granice funkcji w punkcie i w nieskończoności."},
+      {title:"Granice funkcji — zadania",type:"zadania",desc:"Zadania z granic funkcji.",effort:2,questions:8},
+      {title:"Ciągłość funkcji",type:"pdf",desc:"Definicja ciągłości, punkty nieciągłości, własności."},
+      {title:"Pochodna — wstęp",type:"pdf",desc:"Definicja pochodnej, interpretacja geometryczna, styczna."},
+      {title:"Pochodne — proste",type:"pdf",desc:"Pochodne funkcji elementarnych, reguły różniczkowania."},
+      {title:"Pochodne — funkcje złożone",type:"pdf",desc:"Reguła łańcuchowa, pochodne funkcji złożonych."},
+      {title:"Pochodne — zadania",type:"zadania",desc:"Zadania z obliczania pochodnych.",effort:2,questions:12},
+      {title:"Styczna do wykresu",type:"pdf",desc:"Wyznaczanie równania stycznej do wykresu funkcji w punkcie."},
+      {title:"Styczna — zadania",type:"zadania",desc:"Zadania ze styczną do wykresu.",effort:2,questions:6},
+      {title:"Monotoniczność i ekstrema",type:"pdf",desc:"Badanie monotoniczności funkcji za pomocą pochodnej, ekstrema lokalne."},
+      {title:"Monotoniczność — zadania",type:"zadania",desc:"Zadania z badania monotoniczności i ekstremów.",effort:2,questions:8},
+      {title:"Optymalizacja",type:"pdf",desc:"Zadania optymalizacyjne — znajdowanie wartości największej i najmniejszej."},
+      {title:"Optymalizacja — zadania",type:"zadania",desc:"Zadania optymalizacyjne z zastosowaniami praktycznymi.",effort:3,questions:9},
+      {title:"Badanie przebiegu funkcji",type:"pdf",desc:"Kompletne badanie funkcji: dziedzina, granice, pochodna, ekstrema, wykres."},
+      {title:"Badanie funkcji — zadania",type:"zadania",desc:"Zadania z pełnego badania przebiegu funkcji.",effort:3,questions:6},
+      {title:"Całki — wstęp",type:"pdf",desc:"Funkcja pierwotna, całka nieoznaczona, podstawowe wzory."},
+      {title:"Całki — metody",type:"pdf",desc:"Całkowanie przez podstawianie i przez części."},
+      {title:"Całki — zadania",type:"zadania",desc:"Zadania z całek nieoznaczonych.",effort:2,questions:10},
+      {title:"Całka oznaczona",type:"pdf",desc:"Definicja, interpretacja geometryczna, pole pod wykresem."},
+      {title:"Całka oznaczona — zadania",type:"zadania",desc:"Zadania z całek oznaczonych i pól figur.",effort:3,questions:8},
+      {title:"Analiza — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z analizy matematycznej.",effort:3,questions:12},
+    ]
+  },
+  {
+    id: 11, title: "Planimetria", chapters: [
+      {title:"Jak rysować rysunki geometryczne",type:"text",desc:"Techniki rysowania czytelnych rysunków pomocniczych na maturze."},
+      {title:"Trójkąty — podstawy",type:"pdf",desc:"Rodzaje trójkątów, własności, kąty, nierówność trójkąta."},
+      {title:"Trójkąty — pola i obwody",type:"pdf",desc:"Wzory na pole trójkąta: podstawa×h/2, Heron, sin, promień okręgu."},
+      {title:"Trójkąty — zadania",type:"zadania",desc:"Zadania z własnościami trójkątów.",effort:1,questions:5},
+      {title:"Trójkąty podobne",type:"pdf",desc:"Cechy podobieństwa, skala podobieństwa, zastosowania."},
+      {title:"Trójkąty podobne — zadania",type:"zadania",desc:"Zadania z podobieństwa trójkątów.",effort:2,questions:7},
+      {title:"Twierdzenie cosinusów",type:"pdf",desc:"Wzór, dowód, zastosowania w obliczaniu boków i kątów."},
+      {title:"Twierdzenie sinusów",type:"pdf",desc:"Wzór, dowód, promień okręgu opisanego."},
+      {title:"Tw. cosinusów i sinusów — zadania",type:"zadania",desc:"Zadania z twierdzeniami sinusów i cosinusów.",effort:2,questions:6},
+      {title:"Okręgi",type:"pdf",desc:"Kąty wpisane, środkowe, styczne, cięciwy, potęga punktu."},
+      {title:"Okręgi — zadania",type:"zadania",desc:"Zadania z własnościami okręgu.",effort:2,questions:6},
+      {title:"Czworokąty wpisane w okrąg",type:"pdf",desc:"Warunki wpisania, własności, kąty przeciwległe."},
+      {title:"Czworokąty opisane na okręgu",type:"pdf",desc:"Warunki opisania, własności, sumy boków."},
+      {title:"Czworokąty — zadania",type:"zadania",desc:"Zadania z czworokątami wpisanymi i opisanymi.",effort:2,questions:8},
+      {title:"Przekątne wielokątów",type:"pdf",desc:"Własności przekątnych, podział wielokątów na trójkąty."},
+      {title:"Trapezy",type:"pdf",desc:"Własności trapezów, trapez równoramienny, pole, przekątne."},
+      {title:"Trapezy — zadania",type:"zadania",desc:"Zadania z trapezami.",effort:2,questions:6},
+      {title:"Zadania 'dorysuj'",type:"pdf",desc:"Techniki dodawania linii pomocniczych do rysunków geometrycznych."},
+      {title:"Twierdzenia specjalne",type:"pdf",desc:"Twierdzenie Ptolemeusza, Menelaus, Ceva, Stewarta."},
+      {title:"Twierdzenia specjalne — zadania",type:"zadania",desc:"Zadania z twierdzeniami specjalnymi planimetrii.",effort:3,questions:6},
+      {title:"Planimetria — zadania maturalne (łatwe)",type:"zadania",desc:"Prostsze zadania maturalne z planimetrii.",effort:2,questions:8},
+      {title:"Planimetria — zadania maturalne (trudne)",type:"zadania",desc:"Trudniejsze zadania maturalne z planimetrii.",effort:3,questions:8},
+    ]
+  },
+  {
+    id: 12, title: "Geometria analityczna", chapters: [
+      {title:"Geometria analityczna — wprowadzenie",type:"pdf",desc:"Układ współrzędnych, odległość punktów, punkt środkowy odcinka."},
+      {title:"Proste w układzie współrzędnych",type:"pdf",desc:"Równania prostych, równoległość, prostopadłość, odległość punktu od prostej."},
+      {title:"Proste — zadania",type:"zadania",desc:"Zadania z prostymi w układzie współrzędnych.",effort:2,questions:10},
+      {title:"Okręgi w układzie współrzędnych",type:"pdf",desc:"Równanie okręgu, wzajemne położenie prostej i okręgu."},
+      {title:"Okręgi — zadania analityczne",type:"zadania",desc:"Zadania z okręgami w geometrii analitycznej.",effort:2,questions:8},
+      {title:"Planimetria analityczna",type:"pdf",desc:"Rozwiązywanie zadań planimetrycznych metodami analitycznymi."},
+      {title:"Planimetria analityczna — zadania",type:"zadania",desc:"Zadania łączące planimetrię z geometrią analityczną.",effort:3,questions:8},
+      {title:"Geometria analityczna — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z geometrii analitycznej.",effort:3,questions:10},
+    ]
+  },
+  {
+    id: 13, title: "Stereometria", chapters: [
+      {title:"Kąty w bryłach",type:"pdf",desc:"Kąt dwuścienny, kąt między prostą a płaszczyzną, kąt między płaszczyznami."},
+      {title:"Kąty w bryłach — zadania",type:"zadania",desc:"Zadania z kątami w bryłach.",effort:2,questions:6},
+      {title:"Graniastosłupy",type:"pdf",desc:"Objętość, pole powierzchni, przekroje graniastosłupów."},
+      {title:"Graniastosłupy — zadania",type:"zadania",desc:"Zadania z graniastosłupami.",effort:2,questions:8},
+      {title:"Ostrosłupy",type:"pdf",desc:"Objętość, pole powierzchni, wysokość, apotema."},
+      {title:"Ostrosłupy — zadania",type:"zadania",desc:"Zadania z ostrosłupami.",effort:2,questions:9},
+      {title:"Przekroje brył",type:"pdf",desc:"Rysowanie i obliczanie przekrojów graniastosłupów i ostrosłupów."},
+      {title:"Przekroje — zadania",type:"zadania",desc:"Zadania z przekrojami brył.",effort:3,questions:6},
+      {title:"Bryły obrotowe — walec",type:"pdf",desc:"Walec — objętość, pole powierzchni, przekroje."},
+      {title:"Bryły obrotowe — stożek",type:"pdf",desc:"Stożek — objętość, pole powierzchni, twórca."},
+      {title:"Bryły obrotowe — kula",type:"pdf",desc:"Kula — objętość, pole powierzchni, przekroje."},
+      {title:"Bryły obrotowe — zadania",type:"zadania",desc:"Zadania z bryłami obrotowymi.",effort:2,questions:9},
+      {title:"Stereometria — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych ze stereometrii.",effort:3,questions:10},
+    ]
+  },
+  {
+    id: 14, title: "Kombinatoryka i prawdopodobieństwo", chapters: [
+      {title:"Kombinatoryka — wstęp",type:"pdf",desc:"Reguła mnożenia i dodawania, permutacje, wariacje."},
+      {title:"Kombinatoryka — kombinacje",type:"pdf",desc:"Symbol Newtona, kombinacje, zastosowania."},
+      {title:"Kombinatoryka — zadania",type:"zadania",desc:"Zadania z kombinatoryki.",effort:1,questions:9},
+      {title:"Kombinatoryka — zadania maturalne",type:"zadania",desc:"Trudniejsze zadania kombinatoryczne z arkuszy CKE.",effort:2,questions:8},
+      {title:"Dwumian Newtona",type:"pdf",desc:"Wzór dwumianu Newtona, trójkąt Pascala, zastosowania."},
+      {title:"Dwumian Newtona — zadania",type:"zadania",desc:"Zadania z dwumianem Newtona.",effort:2,questions:6},
+      {title:"Prawdopodobieństwo — podstawy",type:"pdf",desc:"Definicja klasyczna, zdarzenia, drzewo zdarzeń."},
+      {title:"Prawdopodobieństwo — zadania",type:"zadania",desc:"Podstawowe zadania z prawdopodobieństwa.",effort:1,questions:10},
+      {title:"Prawdopodobieństwo warunkowe",type:"pdf",desc:"Definicja, wzór, niezależność zdarzeń."},
+      {title:"Prawdopodobieństwo warunkowe — zadania",type:"zadania",desc:"Zadania z prawdopodobieństwem warunkowym.",effort:2,questions:8},
+      {title:"Diagramy Venna",type:"pdf",desc:"Wykorzystanie diagramów Venna w zadaniach z prawdopodobieństwem."},
+      {title:"Diagramy Venna — zadania",type:"zadania",desc:"Zadania z diagramami Venna.",effort:2,questions:6},
+      {title:"Twierdzenie Bayesa",type:"pdf",desc:"Wzór Bayesa, prawdopodobieństwo a posteriori, drzewka."},
+      {title:"Twierdzenie Bayesa — zadania",type:"zadania",desc:"Zadania z twierdzeniem Bayesa.",effort:3,questions:6},
+      {title:"Schemat Bernoulliego",type:"pdf",desc:"Powtarzanie doświadczeń, rozkład dwumianowy, wzór."},
+      {title:"Schemat Bernoulliego — zadania",type:"zadania",desc:"Zadania ze schematem Bernoulliego.",effort:3,questions:8},
+      {title:"Statystyka — średnia, mediana, moda",type:"pdf",desc:"Miary tendencji centralnej, interpretacja graficzna."},
+      {title:"Statystyka — odchylenie standardowe",type:"pdf",desc:"Wariancja, odchylenie standardowe, interpretacja."},
+      {title:"Statystyka — zadania",type:"zadania",desc:"Zadania ze statystyki opisowej.",effort:1,questions:9},
+      {title:"Kombinatoryka i prawdopodobieństwo — zadania maturalne",type:"zadania",desc:"Komplet zadań maturalnych z tego działu.",effort:3,questions:12},
+    ]
+  },
+  {
+    id: 15, title: "Arkusz i strategia", chapters: [
+      {title:"Cały arkusz — omówienie",type:"pdf",desc:"Pełne rozwiązanie przykładowego arkusza maturalnego z komentarzem."},
+      {title:"Strategia rozwiązywania arkusza",type:"text",desc:"Zarządzanie czasem, kolejność zadań, kiedy zgadywać, jak zdobywać punkty cząstkowe."},
+      {title:"Zakończenie",type:"text",desc:"Podsumowanie kursu, ostatnie wskazówki przed maturą. Powodzenia!"},
     ]
   }
 ];
@@ -740,7 +938,7 @@ const COURSE_DATA = [
 const FAQ_DATA = [
   {q:"Jak długo mam dostęp do kursu?",a:"Na zawsze. Płacisz raz i kurs jest Twój — bez limitu czasowego, bez dodatkowych opłat."},
   {q:"Czy kurs obejmuje zarówno podstawę, jak i rozszerzenie?",a:"Tak! W jednej cenie dostajesz pełny materiał na oba poziomy — podstawowy i rozszerzony."},
-  {q:"Jak wygląda nauka?",a:"Oglądasz lekcje wideo, pobierasz PDF z zadaniami, rozwiązujesz je samodzielnie, a potem sprawdzasz z naszymi rozwiązaniami."},
+  {q:"Jak wygląda nauka?",a:"Czytasz materiały tekstowe, pobierasz PDF z teorią i zadaniami, rozwiązujesz je samodzielnie, a potem sprawdzasz z naszymi rozwiązaniami."},
   {q:"Jakie metody płatności akceptujecie?",a:"Obsługujemy Przelewy24, BLIK, karty płatnicze i szybkie przelewy. Dostęp jest nadawany automatycznie."},
   {q:"Czy mogę zwrócić kurs?",a:"Tak — 14-dniowa gwarancja satysfakcji. Jeśli kurs nie spełni oczekiwań, zwrócimy pieniądze."},
   {q:"Czy mogę uczyć się na telefonie?",a:"Tak! Strona jest w pełni responsywna. Wideo i PDF-y działają na każdym urządzeniu."},
@@ -749,9 +947,9 @@ const FAQ_DATA = [
 // ═══════ STATE ═══════
 let state = {
   user: null,        // {id, name, email, hasCourse}
-  progress: {},      // {moduleId: {lessonIndex: true}}
-  currentModule: null,
-  currentLesson: 0,
+  progress: {},      // {sectionId: {chapterIndex: true}}
+  currentSection: null,
+  currentChapter: 0,
   payMethod: 'blik',
   loading: true
 };
@@ -767,17 +965,55 @@ function showToast(msg, type='success') {
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function getTotalLessons() { return COURSE_DATA.reduce((s,m) => s + m.lessons.length, 0); }
-function getCompletedLessons() {
+function getTotalChapters() { return COURSE_DATA.reduce((s,sec) => s + sec.chapters.length, 0); }
+function getCompletedChapters() {
   let c = 0;
-  for (let mid in state.progress) { c += Object.keys(state.progress[mid]).length; }
+  for (let sid in state.progress) { c += Object.keys(state.progress[sid]).length; }
   return c;
 }
-function getModuleProgress(moduleId) {
-  const mod = COURSE_DATA.find(m => m.id === moduleId);
-  if (!mod) return 0;
-  const done = state.progress[moduleId] ? Object.keys(state.progress[moduleId]).length : 0;
-  return Math.round((done / mod.lessons.length) * 100);
+function getSectionProgress(sectionId) {
+  const sec = COURSE_DATA.find(s => s.id === sectionId);
+  if (!sec) return 0;
+  const done = state.progress[sectionId] ? Object.keys(state.progress[sectionId]).length : 0;
+  return Math.round((done / sec.chapters.length) * 100);
+}
+function getGlobalChapterIndex(sectionId, chapterIndex) {
+  let idx = 0;
+  for (const sec of COURSE_DATA) {
+    if (sec.id === sectionId) return idx + chapterIndex;
+    idx += sec.chapters.length;
+  }
+  return idx;
+}
+function getNextChapter() {
+  const sec = COURSE_DATA.find(s => s.id === state.currentSection);
+  if (!sec) return null;
+  if (state.currentChapter < sec.chapters.length - 1) {
+    return { sectionId: state.currentSection, chapterIndex: state.currentChapter + 1 };
+  }
+  const nextSec = COURSE_DATA.find(s => s.id === state.currentSection + 1);
+  if (nextSec) return { sectionId: nextSec.id, chapterIndex: 0 };
+  return null;
+}
+function getPrevChapter() {
+  if (state.currentChapter > 0) {
+    return { sectionId: state.currentSection, chapterIndex: state.currentChapter - 1 };
+  }
+  const prevSec = COURSE_DATA.find(s => s.id === state.currentSection - 1);
+  if (prevSec) return { sectionId: prevSec.id, chapterIndex: prevSec.chapters.length - 1 };
+  return null;
+}
+function getChapterTypeIcon(type) {
+  if (type === 'pdf') return '📄';
+  if (type === 'text') return '📖';
+  if (type === 'zadania') return '✏️';
+  return '📄';
+}
+function getChapterTypeLabel(type) {
+  if (type === 'pdf') return 'PDF';
+  if (type === 'text') return 'Tekst';
+  if (type === 'zadania') return 'Zadania';
+  return type;
 }
 
 function setButtonLoading(btn, loading) {
@@ -1221,142 +1457,239 @@ function renderDashboard() {
   const displayName = state.user.name || state.user.email.split('@')[0];
   document.getElementById('dashWelcome').textContent = `Cześć, ${displayName.split(' ')[0]}! 👋`;
 
-  const total = getTotalLessons();
-  const done = getCompletedLessons();
+  const total = getTotalChapters();
+  const done = getCompletedChapters();
   const pct = total > 0 ? Math.round((done/total)*100) : 0;
-  const hours = Math.round(done * 0.22);
+  const hours = Math.round(done * 0.15);
 
   document.getElementById('dsProgress').textContent = pct + '%';
   document.getElementById('dsBar').style.width = pct + '%';
   document.getElementById('dsCompleted').textContent = done + '/' + total;
   document.getElementById('dsTime').textContent = hours + 'h';
 
-  const grid = document.getElementById('dashModules');
-  grid.innerHTML = COURSE_DATA.map(m => {
-    const mp = getModuleProgress(m.id);
-    const doneL = state.progress[m.id] ? Object.keys(state.progress[m.id]).length : 0;
+  const container = document.getElementById('dashSections');
+  container.innerHTML = COURSE_DATA.map(sec => {
+    const sp = getSectionProgress(sec.id);
+    const doneC = state.progress[sec.id] ? Object.keys(state.progress[sec.id]).length : 0;
     return `
-      <div class="dm-card" onclick="openModule(${m.id})">
-        <div class="dm-card-top">
-          <div class="dm-card-num">0${m.id}</div>
-          <h4>${m.title}</h4>
+      <div class="dash-section" id="dash-sec-${sec.id}">
+        <div class="dash-section-header" onclick="toggleDashSection(${sec.id})">
+          <div class="dash-section-num">${String(sec.id).padStart(2,'0')}</div>
+          <div class="dash-section-info">
+            <h4>${sec.title}</h4>
+            <span>${sec.chapters.length} rozdziałów · ${doneC} ukończonych</span>
+          </div>
+          <div class="dash-section-progress">
+            <div class="dash-section-pct">${sp}%</div>
+            <div class="dash-section-bar"><div class="dash-section-fill" style="width:${sp}%"></div></div>
+          </div>
+          <div class="dash-section-toggle">▼</div>
         </div>
-        <div class="dm-desc">${m.desc}</div>
-        <div class="dm-card-bottom">
-          <div class="dm-card-prog">${mp===100?'<b>Ukończony ✓</b>':`${doneL}/${m.lessons.length} lekcji`}</div>
-          <div class="dm-card-bar"><div class="dm-card-fill" style="width:${mp}%"></div></div>
+        <div class="dash-section-chapters">
+          ${sec.chapters.map((ch, ci) => {
+            const chDone = state.progress[sec.id] && state.progress[sec.id][ci];
+            return `<div class="dash-ch-item ${chDone?'done':''}" onclick="openChapter(${sec.id},${ci})">
+              <div class="dash-ch-check">${chDone?'✓':''}</div>
+              <div class="dash-ch-info">
+                <div class="ch-title">${ch.title}</div>
+                <div class="ch-meta">
+                  <span class="ch-type-badge ${ch.type}">${getChapterTypeIcon(ch.type)} ${getChapterTypeLabel(ch.type)}</span>
+                  ${ch.effort ? `<span class="ch-effort">${[1,2,3].map(e=>`<span class="dot ${e<=ch.effort?'active':''}"></span>`).join('')}</span>` : ''}
+                  ${ch.questions ? `<span>${ch.questions} zadań</span>` : ''}
+                  ${ch.free ? '<span class="ch-free-badge">Darmowy</span>' : ''}
+                </div>
+              </div>
+            </div>`;
+          }).join('')}
         </div>
       </div>`;
   }).join('');
 }
 
+function toggleDashSection(sectionId) {
+  document.getElementById('dash-sec-' + sectionId).classList.toggle('open');
+}
+
 // ═══════ COURSE VIEW ═══════
-function openModule(moduleId) {
-  state.currentModule = moduleId;
-  state.currentLesson = 0;
+function openChapter(sectionId, chapterIndex) {
+  state.currentSection = sectionId;
+  state.currentChapter = chapterIndex || 0;
   navigate('course');
 }
 
 function renderCourse() {
-  const mod = COURSE_DATA.find(m => m.id === state.currentModule);
-  if (!mod) { navigate('dashboard'); return; }
+  const sec = COURSE_DATA.find(s => s.id === state.currentSection);
+  if (!sec) { navigate('dashboard'); return; }
 
-  document.getElementById('cvModuleTitle').textContent = `Moduł ${mod.id}: ${mod.title}`;
+  const total = getTotalChapters();
+  const done = getCompletedChapters();
+  document.getElementById('cvModuleTitle').textContent = sec.title;
+  document.getElementById('cvProgressCounter').textContent = `${done}/${total} ukończone`;
 
+  // Sidebar with all sections
   const sidebar = document.getElementById('cvSidebar');
   sidebar.innerHTML = `
-    <div class="cv-sidebar-title">Lekcje (${mod.lessons.length})</div>
-    ${mod.lessons.map((l, i) => {
-      const isDone = state.progress[mod.id] && state.progress[mod.id][i];
-      const isActive = i === state.currentLesson;
-      return `<div class="cv-lesson-item ${isActive?'active':''} ${isDone?'done':''}" onclick="selectLesson(${i})">
-        <div class="cv-lesson-check">${isDone?'✓':''}</div>
-        <div>
-          <div class="cv-l-title">${l.title}</div>
-          <div class="cv-l-dur">${l.dur}</div>
+    <div class="cv-sidebar-counter">${done}/${total} rozdziałów ukończone</div>
+    ${COURSE_DATA.map(s => {
+      const isCurrentSection = s.id === state.currentSection;
+      return `<div class="cv-section ${isCurrentSection ? 'open' : ''}" id="cv-sec-${s.id}">
+        <div class="cv-section-header" onclick="toggleCvSection(${s.id})">
+          <div class="cv-section-num">${String(s.id).padStart(2,'0')}</div>
+          <div class="cv-section-name">${s.title}</div>
+          <div class="cv-section-count">${s.chapters.length}</div>
+          <div class="cv-section-arrow">▶</div>
+        </div>
+        <div class="cv-section-chapters">
+          ${s.chapters.map((ch, ci) => {
+            const isDone = state.progress[s.id] && state.progress[s.id][ci];
+            const isActive = s.id === state.currentSection && ci === state.currentChapter;
+            return `<div class="cv-ch-item ${isActive?'active':''} ${isDone?'done':''}" onclick="selectChapter(${s.id},${ci})">
+              <div class="cv-ch-check">${isDone?'✓':''}</div>
+              <div class="cv-ch-title">${ch.title}</div>
+              <div class="cv-ch-type">${getChapterTypeIcon(ch.type)}</div>
+            </div>`;
+          }).join('')}
         </div>
       </div>`;
     }).join('')}
   `;
 
-  renderLesson();
+  renderChapter();
+
+  // Scroll active item into view
+  setTimeout(() => {
+    const active = sidebar.querySelector('.cv-ch-item.active');
+    if (active) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, 100);
 }
 
-function selectLesson(index) {
-  state.currentLesson = index;
+function toggleCvSection(sectionId) {
+  document.getElementById('cv-sec-' + sectionId).classList.toggle('open');
+}
+
+function selectChapter(sectionId, chapterIndex) {
+  state.currentSection = sectionId;
+  state.currentChapter = chapterIndex;
   renderCourse();
 }
 
-function renderLesson() {
-  const mod = COURSE_DATA.find(m => m.id === state.currentModule);
-  const lesson = mod.lessons[state.currentLesson];
-  const isDone = state.progress[mod.id] && state.progress[mod.id][state.currentLesson];
+function renderChapter() {
+  const sec = COURSE_DATA.find(s => s.id === state.currentSection);
+  const ch = sec.chapters[state.currentChapter];
+  const isDone = state.progress[sec.id] && state.progress[sec.id][state.currentChapter];
+  const globalIdx = getGlobalChapterIndex(sec.id, state.currentChapter) + 1;
+  const total = getTotalChapters();
+  const prev = getPrevChapter();
+  const next = getNextChapter();
+
+  let contentHTML = '';
+
+  if (ch.type === 'pdf') {
+    contentHTML = `
+      <div class="cv-content-area pdf-content">
+        <div class="cv-pdf-icon">📄</div>
+        <div class="cv-pdf-label">${ch.title}</div>
+        <div class="cv-pdf-sublabel">Kliknij poniżej, żeby otworzyć lub pobrać PDF</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <button class="btn btn-primary" onclick="downloadFile('sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.pdf', this)">📄 Otwórz PDF</button>
+        </div>
+      </div>`;
+  } else if (ch.type === 'text') {
+    contentHTML = `
+      <div class="cv-content-area text-content">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+          <div class="cv-text-icon" style="width:48px;height:48px;font-size:1.2rem">📖</div>
+          <div>
+            <div style="font-weight:600;font-size:1rem;color:var(--text)">${ch.title}</div>
+            <div style="font-size:.82rem;color:var(--text-dim)">Materiał tekstowy</div>
+          </div>
+        </div>
+        <p>${ch.desc}</p>
+        <div style="margin-top:20px;padding:20px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)">
+          <div style="font-size:.85rem;color:var(--text-muted);text-align:center">Treść tego rozdziału zostanie wkrótce dodana.</div>
+        </div>
+      </div>`;
+  } else if (ch.type === 'zadania') {
+    contentHTML = `
+      <div class="cv-content-area zadania-content">
+        <div class="cv-zadania-header">
+          <div class="cv-zadania-icon">✏️</div>
+          <div class="cv-zadania-info">
+            <h4>${ch.title}</h4>
+            <span>${ch.questions ? ch.questions + ' zadań' : 'Zestaw zadań'}</span>
+          </div>
+        </div>
+        ${ch.effort ? `
+          <div class="cv-effort-display">
+            <div class="cv-effort-label">Poziom trudności:</div>
+            <div class="cv-effort-dots">
+              ${[1,2,3].map(e => `<div class="dot ${e <= ch.effort ? 'active' : ''}"></div>`).join('')}
+            </div>
+            <span style="font-size:.78rem;color:var(--text-dim);margin-left:4px">${ch.effort === 1 ? 'Łatwy' : ch.effort === 2 ? 'Średni' : 'Trudny'}</span>
+          </div>
+        ` : ''}
+        <p style="color:var(--text-dim);font-size:.92rem;line-height:1.7;margin-bottom:20px">${ch.desc}</p>
+        <div class="cv-downloads">
+          <h4>📎 Materiały</h4>
+          <div class="cv-dl-item" onclick="downloadFile('sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}-zadania.pdf', this)">
+            <div class="cv-dl-icon" style="background:rgba(251,191,36,0.1)">✏️</div>
+            <div class="cv-dl-info">
+              <div class="dl-name">${ch.title}.pdf</div>
+              <div class="dl-size">Zadania do pobrania</div>
+            </div>
+            <div class="cv-dl-btn">Pobierz ↓</div>
+          </div>
+          <div class="cv-dl-item" onclick="downloadFile('sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}-rozwiazania.pdf', this)">
+            <div class="cv-dl-icon" style="background:rgba(52,211,153,0.1)">📝</div>
+            <div class="cv-dl-info">
+              <div class="dl-name">${ch.title} — Rozwiązania.pdf</div>
+              <div class="dl-size">Rozwiązania do pobrania</div>
+            </div>
+            <div class="cv-dl-btn">Pobierz ↓</div>
+          </div>
+        </div>
+      </div>`;
+  }
 
   document.getElementById('cvMain').innerHTML = `
-    <div class="cv-video">
-      <button class="play-btn" onclick="playLesson()">
-        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-      </button>
-      <div class="cv-video-title">Moduł ${mod.id} · ${lesson.title}</div>
+    <div class="cv-chapter-title">${ch.title}</div>
+    <div class="cv-chapter-meta">
+      <span class="ch-type-badge ${ch.type}">${getChapterTypeIcon(ch.type)} ${getChapterTypeLabel(ch.type)}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted)">${globalIdx}/${total}</span>
+      <span>Sekcja ${sec.id}: ${sec.title}</span>
+      <span>${isDone ? '<span style="color:var(--green)">✓ Ukończony</span>' : '○ Nieukończony'}</span>
     </div>
-    <div class="cv-lesson-title">${lesson.title}</div>
-    <div class="cv-lesson-meta">
-      <span>⏱ ${lesson.dur}</span>
-      <span>📚 Moduł ${mod.id}</span>
-      <span>${isDone ? '<span style="color:var(--green)">✓ Ukończona</span>' : '○ W trakcie'}</span>
-    </div>
-    <div class="cv-lesson-desc">${lesson.desc}</div>
-    <div class="cv-downloads">
-      <h4>📎 Materiały do pobrania</h4>
-      <div class="cv-dl-item" onclick="downloadFile('modul-${mod.id}/lekcja-${state.currentLesson + 1}-zadania.pdf', this)">
-        <div class="cv-dl-icon">📄</div>
-        <div class="cv-dl-info">
-          <div class="dl-name">${lesson.title} — Zadania.pdf</div>
-          <div class="dl-size">PDF</div>
-        </div>
-        <div class="cv-dl-btn">Pobierz ↓</div>
-      </div>
-      <div class="cv-dl-item" onclick="downloadFile('modul-${mod.id}/lekcja-${state.currentLesson + 1}-rozwiazania.pdf', this)">
-        <div class="cv-dl-icon" style="background:rgba(52,211,153,0.1)">📝</div>
-        <div class="cv-dl-info">
-          <div class="dl-name">${lesson.title} — Rozwiązania.pdf</div>
-          <div class="dl-size">PDF</div>
-        </div>
-        <div class="cv-dl-btn">Pobierz ↓</div>
-      </div>
-    </div>
+    <div class="cv-chapter-desc">${ch.desc}</div>
+    ${contentHTML}
     <button class="btn ${isDone ? 'btn-ghost' : 'btn-primary'} btn-full cv-complete-btn" onclick="toggleComplete()">
       ${isDone ? '↩ Cofnij ukończenie' : '✓ Oznacz jako ukończone'}
     </button>
-    ${state.currentLesson < mod.lessons.length - 1 ? `
-      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="selectLesson(${state.currentLesson + 1})">
-        Następna lekcja →
-      </button>
-    ` : ''}
+    <div class="cv-nav-buttons">
+      ${prev ? `<button class="btn btn-ghost cv-nav-prev" onclick="selectChapter(${prev.sectionId},${prev.chapterIndex})">← Poprzedni</button>` : '<div></div>'}
+      ${next ? `<button class="btn btn-primary cv-nav-next" onclick="selectChapter(${next.sectionId},${next.chapterIndex})">Następny →</button>` : '<div></div>'}
+    </div>
   `;
 }
 
 async function toggleComplete() {
-  const mid = state.currentModule;
-  const lid = state.currentLesson;
-  if (!state.progress[mid]) state.progress[mid] = {};
+  const sid = state.currentSection;
+  const cid = state.currentChapter;
+  if (!state.progress[sid]) state.progress[sid] = {};
 
-  if (state.progress[mid][lid]) {
-    delete state.progress[mid][lid];
-    if (Object.keys(state.progress[mid]).length === 0) delete state.progress[mid];
-    showToast('Lekcja cofnięta');
+  if (state.progress[sid][cid]) {
+    delete state.progress[sid][cid];
+    if (Object.keys(state.progress[sid]).length === 0) delete state.progress[sid];
+    showToast('Rozdział cofnięty');
   } else {
-    state.progress[mid][lid] = true;
-    showToast('Lekcja ukończona! 🎉');
+    state.progress[sid][cid] = true;
+    showToast('Rozdział ukończony! 🎉');
   }
 
-  // Zapisz postęp do Supabase
   await saveProgress();
   renderCourse();
 }
 
-function playLesson() { showToast('Tu będzie odtwarzacz Vimeo z Twoim wideo!', 'success'); }
-function playDemo() { showToast('Tu osadzisz filmik demo z Vimeo!', 'success'); }
+function playDemo() { showToast('Tu osadzisz materiał demo!', 'success'); }
 
 async function downloadFile(filePath, element) {
   if (!sb) { showToast('Serwer niedostępny', 'error'); return; }
@@ -1405,13 +1738,21 @@ async function downloadFile(filePath, element) {
 
 // ═══════ LANDING DYNAMIC ═══════
 function renderLandingModules() {
-  document.getElementById('landingModules').innerHTML = COURSE_DATA.map(m => `
+  document.getElementById('landingModules').innerHTML = COURSE_DATA.map(sec => {
+    const pdfCount = sec.chapters.filter(c => c.type === 'pdf').length;
+    const zadaniaCount = sec.chapters.filter(c => c.type === 'zadania').length;
+    const textCount = sec.chapters.filter(c => c.type === 'text').length;
+    const tags = [];
+    if (pdfCount) tags.push(`<span class="mod-tag">📄 ${pdfCount} PDF</span>`);
+    if (zadaniaCount) tags.push(`<span class="mod-tag">✏️ ${zadaniaCount} zadań</span>`);
+    if (textCount) tags.push(`<span class="mod-tag">📖 ${textCount} tekstów</span>`);
+    return `
     <div class="mod-item reveal">
-      <div class="mod-n">0${m.id}</div>
-      <div class="mod-info"><h4>${m.title}</h4><span>${m.desc}</span></div>
-      <div class="mod-tags"><span class="mod-tag">🎥 ${m.lessons.length} lekcji</span><span class="mod-tag">📄 PDF</span></div>
-    </div>
-  `).join('');
+      <div class="mod-n">${String(sec.id).padStart(2,'0')}</div>
+      <div class="mod-info"><h4>${sec.title}</h4><span>${sec.chapters.length} rozdziałów</span></div>
+      <div class="mod-tags">${tags.join('')}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderFAQ() {
