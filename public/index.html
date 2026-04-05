@@ -1612,85 +1612,18 @@ function renderChapter() {
   const next = getNextChapter();
 
   let contentHTML = '';
+  const mdPath = `sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.md`;
+  const pdfPath = `sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.pdf`;
 
-  if (ch.type === 'pdf') {
-    const pdfPath = `sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.pdf`;
-    contentHTML = `
-      <div class="cv-pdf-toolbar">
-        <div class="pdf-title">📄 ${ch.title}</div>
-        <button class="btn btn-ghost btn-sm" onclick="downloadFile('${pdfPath}', this)">↓ Pobierz</button>
-      </div>
-      <div id="pdfViewer" class="cv-pdf-embed">
-        <div class="cv-pdf-loading">
-          <div class="spinner"></div>
-          <div>Ładowanie PDF...</div>
-        </div>
-      </div>`;
-    // Załaduj PDF po wyrenderowaniu
-    setTimeout(() => loadPdfInline(pdfPath), 100);
-  } else if (ch.type === 'text') {
-    const mdPath = `sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.md`;
-    const pdfPath = `sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}.pdf`;
-    contentHTML = `
-      <div class="cv-content-area text-content">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-          <div class="cv-text-icon" style="width:48px;height:48px;font-size:1.2rem">📖</div>
-          <div style="flex:1">
-            <div style="font-weight:600;font-size:1rem;color:var(--text)">${ch.title}</div>
-            <div style="font-size:.82rem;color:var(--text-dim)">Materiał tekstowy</div>
-          </div>
-        </div>
-        <p>${ch.desc}</p>
-        <div class="cv-md-toolbar">
-          <div style="font-size:.82rem;color:var(--text-muted)">📖 Treść rozdziału</div>
-          <button class="btn btn-ghost btn-sm" onclick="downloadFile('${pdfPath}', this)">📄 Pobierz PDF</button>
-        </div>
-        <div id="mdContainer" class="cv-md-container">
-          <div class="cv-md-loading"><div class="spinner" style="margin:0 auto 12px"></div>Ładowanie treści...</div>
-        </div>
-      </div>`;
-    setTimeout(() => loadMarkdown(mdPath), 100);
-  } else if (ch.type === 'zadania') {
-    contentHTML = `
-      <div class="cv-content-area zadania-content">
-        <div class="cv-zadania-header">
-          <div class="cv-zadania-icon">✏️</div>
-          <div class="cv-zadania-info">
-            <h4>${ch.title}</h4>
-            <span>${ch.questions ? ch.questions + ' zadań' : 'Zestaw zadań'}</span>
-          </div>
-        </div>
-        ${ch.effort ? `
-          <div class="cv-effort-display">
-            <div class="cv-effort-label">Poziom trudności:</div>
-            <div class="cv-effort-dots">
-              ${[1,2,3].map(e => `<div class="dot ${e <= ch.effort ? 'active' : ''}"></div>`).join('')}
-            </div>
-            <span style="font-size:.78rem;color:var(--text-dim);margin-left:4px">${ch.effort === 1 ? 'Łatwy' : ch.effort === 2 ? 'Średni' : 'Trudny'}</span>
-          </div>
-        ` : ''}
-        <p style="color:var(--text-dim);font-size:.92rem;line-height:1.7;margin-bottom:20px">${ch.desc}</p>
-        <div class="cv-downloads">
-          <h4>📎 Materiały</h4>
-          <div class="cv-dl-item" onclick="downloadFile('sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}-zadania.pdf', this)">
-            <div class="cv-dl-icon" style="background:rgba(251,191,36,0.1)">✏️</div>
-            <div class="cv-dl-info">
-              <div class="dl-name">${ch.title}.pdf</div>
-              <div class="dl-size">Zadania do pobrania</div>
-            </div>
-            <div class="cv-dl-btn">Pobierz ↓</div>
-          </div>
-          <div class="cv-dl-item" onclick="downloadFile('sekcja-${sec.id}/rozdzial-${state.currentChapter + 1}-rozwiazania.pdf', this)">
-            <div class="cv-dl-icon" style="background:rgba(52,211,153,0.1)">📝</div>
-            <div class="cv-dl-info">
-              <div class="dl-name">${ch.title} — Rozwiązania.pdf</div>
-              <div class="dl-size">Rozwiązania do pobrania</div>
-            </div>
-            <div class="cv-dl-btn">Pobierz ↓</div>
-          </div>
-        </div>
-      </div>`;
-  }
+  contentHTML = `
+    <div class="cv-md-toolbar">
+      <div style="font-size:.85rem;color:var(--text-dim)">📖 Treść rozdziału</div>
+      <button class="btn btn-ghost btn-sm" onclick="downloadFile('${pdfPath}', this)">📄 Pobierz PDF</button>
+    </div>
+    <div id="mdContainer" class="cv-md-container">
+      <div class="cv-md-loading"><div class="spinner" style="margin:0 auto 12px"></div>Ładowanie treści...</div>
+    </div>`;
+  setTimeout(() => loadMarkdown(mdPath), 100);
 
   document.getElementById('cvMain').innerHTML = `
     <div class="cv-chapter-title">${ch.title}</div>
