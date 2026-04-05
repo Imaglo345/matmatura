@@ -1694,10 +1694,13 @@ function playDemo() { showToast('Tu osadzisz materiał demo!', 'success'); }
 async function downloadFile(filePath, element) {
   if (!sb) { showToast('Serwer niedostępny', 'error'); return; }
 
-  // Zmień przycisk na ładowanie
-  const btn = element.querySelector('.cv-dl-btn');
-  const origText = btn.textContent;
-  btn.textContent = '⏳ Pobieram...';
+  // Znajdź przycisk do zmiany tekstu — obsłuż każdy typ elementu
+  let btn = null;
+  let origText = '';
+  try {
+    btn = (element && element.querySelector && element.querySelector('.cv-dl-btn')) || element || null;
+    if (btn) { origText = btn.textContent; btn.textContent = '⏳ Pobieram...'; }
+  } catch(e) {}
 
   try {
     // Pobierz token sesji
@@ -1726,13 +1729,13 @@ async function downloadFile(filePath, element) {
 
   } catch (e) {
     console.error('Download error:', e);
-    if (e.message.includes('nie znaleziony') || e.message.includes('404')) {
+    if (e.message && (e.message.includes('nie znaleziony') || e.message.includes('404'))) {
       showToast('PDF jeszcze nie dodany do tego modułu', 'error');
     } else {
-      showToast(e.message, 'error');
+      showToast(e.message || 'Błąd pobierania', 'error');
     }
   } finally {
-    btn.textContent = origText;
+    if (btn && origText) btn.textContent = origText;
   }
 }
 
