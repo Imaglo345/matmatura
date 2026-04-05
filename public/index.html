@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -318,6 +320,8 @@ footer{padding:40px;border-top:1px solid var(--border);display:flex;align-items:
 .cv-md-container hr{border:none;border-top:1px solid var(--border);margin:20px 0}
 .cv-md-container strong{color:var(--text);font-weight:600}
 .cv-md-container em{font-style:italic}
+.cv-md-container .katex-display{margin:16px 0;overflow-x:auto;padding:8px 0}
+.cv-md-container .katex{font-size:1.05em}
 .cv-md-container h1:first-child,.cv-md-container h2:first-child,.cv-md-container h3:first-child{margin-top:0}
 .cv-md-loading{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:.88rem}
 .cv-md-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
@@ -1778,12 +1782,49 @@ async function loadMarkdown(filePath) {
 
     const mdText = await mdRes.text();
 
-    // Parsuj markdown i wyświetl
+    // Parsuj markdown z obsługą LaTeX
     if (window.marked) {
       marked.setOptions({ breaks: true, gfm: true });
-      container.innerHTML = marked.parse(mdText);
+
+      // 1. Zamień bloki LaTeX na placeholdery (żeby marked ich nie zepsuł)
+      const mathBlocks = [];
+      let processed = mdText;
+
+      // Blokowe: $$...$$
+      processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, tex) => {
+        const id = mathBlocks.length;
+        mathBlocks.push({ tex: tex.trim(), display: true });
+        return `%%MATH_BLOCK_${id}%%`;
+      });
+
+      // Inline: $...$  (ale nie $$ ani \$)
+      processed = processed.replace(/(?<!\$)\$(?!\$)((?:[^$\\]|\\.)+?)\$/g, (match, tex) => {
+        const id = mathBlocks.length;
+        mathBlocks.push({ tex: tex.trim(), display: false });
+        return `%%MATH_BLOCK_${id}%%`;
+      });
+
+      // 2. Parsuj markdown
+      let html = marked.parse(processed);
+
+      // 3. Zamień placeholdery na wyrenderowany KaTeX
+      if (window.katex) {
+        html = html.replace(/%%MATH_BLOCK_(\d+)%%/g, (match, idStr) => {
+          const block = mathBlocks[parseInt(idStr)];
+          try {
+            return katex.renderToString(block.tex, {
+              displayMode: block.display,
+              throwOnError: false,
+              trust: true
+            });
+          } catch (e) {
+            return `<code style="color:var(--red)">${block.tex}</code>`;
+          }
+        });
+      }
+
+      container.innerHTML = html;
     } else {
-      // Fallback bez marked.js — wyświetl surowy tekst
       container.innerHTML = '<pre style="white-space:pre-wrap;font-size:.9rem">' + mdText.replace(/</g,'&lt;') + '</pre>';
     }
 
