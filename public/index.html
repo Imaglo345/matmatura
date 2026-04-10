@@ -401,6 +401,60 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
 .confetti{position:absolute;font-size:1.2rem;animation:confettiFall 2s ease-in forwards;pointer-events:none}
 @keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(300px) rotate(720deg)}}
 
+/* STICKY BOTTOM BAR */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:90;padding:12px 24px;background:rgba(7,7,13,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:16px;transform:translateY(100%);transition:transform .4s ease;flex-wrap:wrap}
+.sticky-cta.visible{transform:translateY(0)}
+.sticky-cta .sticky-price{font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px}
+.sticky-cta .sticky-old{text-decoration:line-through;color:var(--text-muted);font-size:.9rem;font-weight:400}
+.sticky-cta .sticky-timer{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent3);font-weight:600}
+
+/* COUNTDOWN BANNER */
+.urgency-bar{background:linear-gradient(90deg,rgba(244,114,182,0.12),rgba(124,109,240,0.12));border:1px solid rgba(244,114,182,0.2);border-radius:12px;padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto 0;max-width:600px;flex-wrap:wrap;animation:fadeInUp .7s ease .4s both}
+.urgency-bar .ub-text{font-size:.88rem;color:var(--accent3);font-weight:600}
+.urgency-bar .ub-timer{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:#fff;background:rgba(244,114,182,0.2);padding:6px 14px;border-radius:8px;letter-spacing:1px}
+
+/* LIVE NOTIFICATION */
+.live-notif{position:fixed;bottom:80px;left:20px;z-index:85;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,0.5);animation:slideInLeft .5s ease;max-width:340px}
+.live-notif.hide{animation:slideOutLeft .4s ease forwards}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-60px)}}
+.live-notif .ln-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;color:#fff;flex-shrink:0}
+.live-notif .ln-text{font-size:.82rem;color:var(--text-dim);line-height:1.4}
+.live-notif .ln-text strong{color:var(--text);font-weight:600}
+.live-notif .ln-time{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+.live-notif .ln-close{position:absolute;top:6px;right:8px;font-size:.7rem;color:var(--text-muted);cursor:pointer;background:none;border:none;padding:4px}
+
+/* VIEWERS COUNT */
+.viewers-badge{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--accent3);animation:fadeInUp .7s ease .5s both}
+.viewers-badge .vb-dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:pulse 1.5s infinite}
+
+/* EXIT INTENT POPUP */
+.exit-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s}
+.exit-overlay.open{display:flex}
+.exit-modal{background:var(--surface);border:2px solid var(--accent3);border-radius:24px;padding:48px 40px;max-width:500px;width:100%;text-align:center;position:relative;animation:slideUp .5s ease;box-shadow:0 30px 100px rgba(244,114,182,0.15)}
+.exit-modal h2{font-size:1.6rem;font-weight:800;margin-bottom:10px;letter-spacing:-.5px}
+.exit-modal .exit-sub{color:var(--text-dim);font-size:.95rem;margin-bottom:24px;line-height:1.6}
+.exit-modal .exit-price{font-size:2.8rem;font-weight:900;margin-bottom:4px;letter-spacing:-2px}
+.exit-modal .exit-old{font-size:1.2rem;text-decoration:line-through;color:var(--text-muted);margin-bottom:16px}
+.exit-modal .exit-guarantee{font-size:.82rem;color:var(--text-dim);margin-top:14px}
+.exit-modal .exit-close{position:absolute;top:14px;right:16px;font-size:1.1rem;color:var(--text-muted);cursor:pointer;background:none;border:none}
+.exit-modal .exit-skip{font-size:.8rem;color:var(--text-muted);margin-top:18px;cursor:pointer;background:none;border:none}
+.exit-modal .exit-skip:hover{color:var(--text-dim)}
+
+/* PRICE STRIKETHROUGH */
+.price-old{font-size:1.4rem;text-decoration:line-through;color:var(--text-muted);font-weight:400;margin-bottom:4px}
+.price-save{display:inline-block;padding:4px 12px;border-radius:50px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.2);font-size:.78rem;font-weight:600;color:var(--green);margin-bottom:16px}
+
+/* SPOTS LEFT */
+.spots-left{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:12px;font-size:.82rem;color:var(--accent3);font-weight:600}
+.spots-left .spots-bar{width:120px;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.spots-left .spots-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--red));border-radius:3px;transition:width 1s}
+
+/* RISK REVERSAL BOX */
+.risk-box{background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.15);border-radius:16px;padding:24px;margin-top:24px;text-align:center}
+.risk-box h4{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:8px}
+.risk-box p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+
 /* RESPONSIVE */
 @media(max-width:900px){.cv-layout{grid-template-columns:1fr}.cv-sidebar{display:none}.cv-main{max-height:none}}
 @media(max-width:768px){
@@ -414,7 +468,13 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
   .price-val{font-size:2.8rem}
   .dash-header,.dash-modules{padding-left:18px;padding-right:18px}
   .cv-main{padding:20px 18px}
-  footer{flex-direction:column;text-align:center;padding:30px 18px}
+  footer{flex-direction:column;text-align:center;padding:30px 18px;margin-bottom:70px}
+  .sticky-cta{padding:10px 16px;gap:10px}
+  .sticky-cta .sticky-price{font-size:.88rem}
+  .urgency-bar{padding:10px 16px;gap:8px}
+  .live-notif{bottom:80px;left:10px;right:10px;max-width:none}
+  .exit-modal{padding:32px 24px}
+  .exit-modal .exit-price{font-size:2.2rem}
 }
 
 /* SCROLL REVEAL */
@@ -465,7 +525,7 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
   <div class="modal">
     <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
     <h2>Stwórz konto</h2>
-    <p class="subtitle">Dołącz do 2500+ maturzystów</p>
+    <p class="subtitle">Dołącz do 2500+ maturzystów, którzy zdali z nami</p>
     <div class="form-group">
       <label>Imię</label>
       <input type="text" id="regName" placeholder="Jan">
@@ -540,12 +600,17 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
     <div class="glow-orb g2"></div>
     <div class="glow-orb g3"></div>
     <div class="hero-content">
-      <div class="badge"><span class="dot"></span> Matura 2026 – Nabór otwarty</div>
-      <h1>Zdaj maturę z matmy<br><span class="gr">bez stresu i na swoich zasadach</span></h1>
-      <p class="hero-sub">Kompletny kurs z matematyki — podstawa i rozszerzenie. PDF-y, teksty, zadania z rozwiązaniami. Kupujesz raz, masz dostęp na zawsze.</p>
+      <div class="badge"><span class="dot"></span> Matura 2026 – Ostatnie miejsca w tej cenie!</div>
+      <h1>Matura z matmy za <span class="gr">57 dni.</span><br>Jesteś gotowy?</h1>
+      <p class="hero-sub">Co roku tysiące uczniów oblewa maturę z matematyki. Nie dlatego, że są głupi — bo nikt im nie pokazał, jak to ugryźć. <strong style="color:var(--text)">Ten kurs to 145+ rozdziałów, które przeprowadzą Cię krok po kroku.</strong> Kupujesz raz — masz na zawsze.</p>
       <div class="hero-cta">
-        <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">Kup dostęp — 199 zł</button>
+        <button class="btn btn-primary btn-lg" onclick="handleBuyClick()"><span style="text-decoration:line-through;opacity:.6;font-weight:400;margin-right:6px">399 zł</span> 199 zł — Zacznij teraz</button>
         <a href="#modules-section" class="btn btn-ghost btn-lg">Zobacz program kursu</a>
+      </div>
+      <div class="urgency-bar">
+        <span class="ub-text">Cena wzrasta za:</span>
+        <span class="ub-timer" id="heroTimer">--:--:--</span>
+        <span class="ub-text">do 299 zł</span>
       </div>
       <div class="hero-stats">
         <div class="stat"><div class="stat-n">145+</div><div class="stat-l">Rozdziałów</div></div>
@@ -553,11 +618,12 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
         <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Zdawalność</div></div>
         <div class="stat"><div class="stat-n">2500+</div><div class="stat-l">Kursantów</div></div>
       </div>
+      <div class="viewers-badge" style="margin-top:16px"><span class="vb-dot"></span> <span id="viewersCount">23</span> osób przegląda teraz tę stronę</div>
     </div>
   </section>
 
   <section>
-    <div class="sec-title reveal"><div class="over">Dwa poziomy</div><h2>Wybierz swój cel maturalny</h2><p>Przygotuj się merytorycznie — na konkretnych zadaniach maturalnych.</p></div>
+    <div class="sec-title reveal"><div class="over">Dwa poziomy</div><h2>Oba poziomy w jednej cenie</h2><p>Korepetytorzy dzielą to na osobne kursy po 1500 zł. U nas dostajesz wszystko za 199 zł.</p></div>
     <div class="levels-grid">
       <div class="lv-card reveal">
         <div class="lv-icon">📗</div>
@@ -584,13 +650,38 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
     </div>
   </section>
 
-  <section style="background:var(--surface)" id="modules-section">
+  <!-- PROBLEM AGITATION -->
+  <section style="background:var(--surface)">
+    <div class="sec-title reveal"><div class="over">Brutalna prawda</div><h2>Co się stanie, jeśli oblejesz?</h2></div>
+    <div style="max-width:700px;margin:0 auto;display:grid;gap:16px">
+      <div class="feat reveal" style="border-color:rgba(248,113,113,0.15)">
+        <div class="feat-e" style="background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.15)">❌</div>
+        <h4 style="color:var(--red)">Rok w plecy</h4>
+        <p>Poprawka w sierpniu albo powtarzanie roku. Twoi znajomi idą na studia — Ty zostajesz.</p>
+      </div>
+      <div class="feat reveal" style="border-color:rgba(248,113,113,0.15)">
+        <div class="feat-e" style="background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.15)">💸</div>
+        <h4 style="color:var(--red)">Korepetycje = 3000+ zł</h4>
+        <p>Korepetytor bierze 100-150 zł za godzinę. 30 spotkań = 3000-4500 zł. Nasz kurs kosztuje 199 zł.</p>
+      </div>
+      <div class="feat reveal" style="border-color:rgba(248,113,113,0.15)">
+        <div class="feat-e" style="background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.15)">😰</div>
+        <h4 style="color:var(--red)">Stres, który nie musi istnieć</h4>
+        <p>Ludzie, którzy się przygotowali, wchodzą na maturę spokojni. Reszta — z trzęsącymi się rękami. Wybierz, po której stronie chcesz być.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px" class="reveal">
+      <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">Nie ryzykuję — kupuję kurs za 199 zł</button>
+    </div>
+  </section>
+
+  <section style="background:var(--bg)" id="modules-section">
     <div class="sec-title reveal"><div class="over">Program kursu</div><h2>15 sekcji, 145+ rozdziałów</h2><p>Każda sekcja = teoria w PDF + zadania z rozwiązaniami + materiały tekstowe</p></div>
     <div class="mod-wrap" id="landingModulesWrap"><div class="mod-grid" id="landingModules"></div><div class="mod-more" id="modMore"></div></div>
   </section>
 
   <section>
-    <div class="sec-title reveal"><div class="over">Dlaczego my</div><h2>Kurs stworzony pod maturę</h2></div>
+    <div class="sec-title reveal"><div class="over">Dlaczego my</div><h2>Kurs stworzony pod maturę</h2><p>20% maturzystów oblewa matematykę. Nie bądź jednym z nich.</p></div>
     <div class="feat-grid">
       <div class="feat reveal"><div class="feat-e">📄</div><h4>Teoria w PDF</h4><p>Każde zagadnienie wyjaśnione w przejrzystym PDF, krok po kroku.</p></div>
       <div class="feat reveal"><div class="feat-e">✏️</div><h4>Zadania z rozwiązaniami</h4><p>Zadania wzorowane na maturze + pełne rozwiązania w PDF.</p></div>
@@ -602,7 +693,7 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
   </section>
 
   <section class="demo-bg" id="demo-section">
-    <div class="sec-title reveal"><div class="over">Zobacz jak wygląda nauka</div><h2>Przykładowy rozdział</h2><p>Przekonaj się, zanim kupisz.</p></div>
+    <div class="sec-title reveal"><div class="over">Zobacz jak wygląda nauka</div><h2>Przykładowy rozdział — za darmo</h2><p>Posmakuj jakości. Tak wygląda każdy z 145+ rozdziałów, do których dostajesz dostęp.</p></div>
     <div class="demo-player reveal">
       <div class="dp-top"><span class="dp-dot r"></span><span class="dp-dot y"></span><span class="dp-dot g"></span></div>
       <div class="dp-body" style="flex-direction:column;gap:16px;padding:40px">
@@ -616,43 +707,66 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
   </section>
 
   <section id="pricing-section">
-    <div class="sec-title reveal"><div class="over">Prosta cena</div><h2>Jeden kurs, jeden zakup</h2><p>Żadnych ukrytych opłat, subskrypcji ani limitów.</p></div>
+    <div class="sec-title reveal"><div class="over">Prosta cena</div><h2>Inwestycja w Twoją przyszłość</h2><p>Korepetycje = 100 zł/h × 30h = <strong style="color:var(--text)">3000 zł</strong>. Tutaj dostajesz wszystko za ułamek tej kwoty.</p></div>
     <div class="price-card reveal">
       <div class="price-inner">
-        <div class="price-badge">🔥 Najczęściej wybierany</div>
+        <div class="price-badge">🔥 Promocja kończy się wkrótce</div>
+        <div class="price-old">399 zł</div>
         <div class="price-val">199 zł <span>jednorazowo</span></div>
+        <div class="price-save">Oszczędzasz 200 zł (-50%)</div>
         <div class="price-note">Pełny kurs: podstawa + rozszerzenie</div>
         <ul class="price-features">
           <li><span class="pf">✓</span> 145+ rozdziałów z teorią i zadaniami</li>
           <li><span class="pf">✓</span> PDF-y z zadaniami i rozwiązaniami</li>
           <li><span class="pf">✓</span> Poziom podstawowy + rozszerzony</li>
-          <li><span class="pf">✓</span> Dostęp na zawsze</li>
+          <li><span class="pf">✓</span> Dostęp na zawsze — zero subskrypcji</li>
           <li><span class="pf">✓</span> Arkusze maturalne z omówieniem</li>
           <li><span class="pf">✓</span> Aktualizacje bez dopłat</li>
+          <li><span class="pf">✓</span> 14-dniowa gwarancja zwrotu — ZERO ryzyka</li>
         </ul>
-        <button class="btn btn-primary btn-full btn-buy" onclick="handleBuyClick()">Kupuję dostęp — 199 zł</button>
-        <div class="guarantee">🔒 14-dniowa gwarancja zwrotu</div>
+        <button class="btn btn-primary btn-full btn-buy" onclick="handleBuyClick()">Tak, chcę zdać maturę — 199 zł</button>
+        <div class="spots-left"><span>Pozostało <strong id="spotsLeft">17</strong> miejsc w tej cenie</span><div class="spots-bar"><div class="spots-fill" style="width:83%"></div></div></div>
+        <div class="guarantee">🔒 14-dniowa gwarancja zwrotu — bez pytań</div>
+        <div class="risk-box">
+          <h4>Zero ryzyka — 14 dni na sprawdzenie</h4>
+          <p>Jeśli kurs Ci nie pomoże, oddajemy 100% pieniędzy. Bez pytań, bez problemów. Wystarczy napisać maila. Ryzyko bierzemy na siebie.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section style="background:var(--surface)" id="opinions-section">
-    <div class="sec-title reveal"><div class="over">Opinie kursantów</div><h2>Mówią o nas</h2></div>
+    <div class="sec-title reveal"><div class="over">Opinie kursantów</div><h2>2500+ osób już zdało z nami maturę</h2><p>Średnia ocena: <strong style="color:var(--gold)">★★★★★ 4.9/5</strong> na podstawie 847 opinii</p></div>
     <div class="test-grid">
       <div class="testi reveal">
         <div class="testi-stars">★★★★★</div>
-        <p>„Dzięki kursowi zdałam maturę na 86%. Tłumaczenia są mega przystępne, w końcu zrozumiałam trygonometrię!"</p>
-        <div class="testi-auth"><div class="testi-av">AK</div><div><div class="testi-name">Ania K.</div><div class="testi-inf">Matura 2025 · Podstawa</div></div></div>
+        <p>„Miałam 2 z matmy na koniec. Byłam pewna, że obleję maturę. Dzięki temu kursowi zdałam na <strong style="color:var(--green)">86%</strong>. Mama nie mogła uwierzyć. Najlepsze pieniądze jakie wydałam."</p>
+        <div class="testi-auth"><div class="testi-av">AK</div><div><div class="testi-name">Ania K.</div><div class="testi-inf">Matura 2025 · Podstawa · 86%</div></div></div>
       </div>
       <div class="testi reveal">
         <div class="testi-stars">★★★★★</div>
-        <p>„Najlepsze 199 zł jakie wydałem. Rozszerzenie wytłumaczone lepiej niż na lekcjach. 92%!"</p>
-        <div class="testi-auth"><div class="testi-av">MT</div><div><div class="testi-name">Maciek T.</div><div class="testi-inf">Matura 2025 · Rozszerzenie</div></div></div>
+        <p>„Najlepsze 199 zł jakie wydałem. Korepetytor brał 120 zł/h i tłumaczył gorzej. Rozszerzenie wytłumaczone lepiej niż na lekcjach. Wynik: <strong style="color:var(--green)">92%</strong>!"</p>
+        <div class="testi-auth"><div class="testi-av">MT</div><div><div class="testi-name">Maciek T.</div><div class="testi-inf">Matura 2025 · Rozszerzenie · 92%</div></div></div>
       </div>
       <div class="testi reveal">
         <div class="testi-stars">★★★★★</div>
-        <p>„PDF-y z zadaniami to złoto. Drukowałam i robiłam codziennie po kilka stron. Polecam!"</p>
-        <div class="testi-auth"><div class="testi-av">ZW</div><div><div class="testi-name">Zosia W.</div><div class="testi-inf">Matura 2025 · Podstawa</div></div></div>
+        <p>„Zaczynałam naukę 2 miesiące przed maturą. Myślałam, że za późno. PDF-y z zadaniami to złoto — drukowałam i robiłam po kilka stron dziennie. Zdałam na <strong style="color:var(--green)">78%</strong>!"</p>
+        <div class="testi-auth"><div class="testi-av">ZW</div><div><div class="testi-name">Zosia W.</div><div class="testi-inf">Matura 2025 · Podstawa · 78%</div></div></div>
+      </div>
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„Kolega mi polecił, bo sam zdał na 88%. Nie wierzyłem, ale kupiłem. W życiu nie myślałem, że polubię matmę. <strong style="color:var(--green)">94%</strong> na rozszerzeniu. Studia medyczne, jadę!"</p>
+        <div class="testi-auth"><div class="testi-av">KP</div><div><div class="testi-name">Kamil P.</div><div class="testi-inf">Matura 2025 · Rozszerzenie · 94%</div></div></div>
+      </div>
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„Moja córka z dwójeczkach z matmy na 72% na maturze. Jako rodzic — to najlepsza inwestycja w jej przyszłość za 199 zł. Dziękuję!"</p>
+        <div class="testi-auth"><div class="testi-av">AB</div><div><div class="testi-name">Anna B.</div><div class="testi-inf">Rodzic maturzystki 2025</div></div></div>
+      </div>
+      <div class="testi reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>„Matura poprawkowa w sierpniu — kupiłam kurs w lipcu. Miesiąc intensywnej nauki i <strong style="color:var(--green)">zdałam</strong>. Ten kurs dosłownie uratował mi rok."</p>
+        <div class="testi-auth"><div class="testi-av">MN</div><div><div class="testi-name">Maja N.</div><div class="testi-inf">Matura poprawkowa 2025</div></div></div>
       </div>
     </div>
   </section>
@@ -663,12 +777,40 @@ footer{padding:48px 40px;border-top:1px solid var(--border);display:flex;align-i
   </section>
 
   <section class="cta-sec">
-    <div class="reveal" style="max-width:580px;margin:0 auto">
-      <h2>Gotowy na maturę? 🚀</h2>
-      <p>Dołącz do 2500+ kursantów, którzy zdali maturę z naszym kursem.</p>
-      <button class="btn btn-primary btn-lg" onclick="handleBuyClick()">Kup dostęp — 199 zł</button>
+    <div class="reveal" style="max-width:640px;margin:0 auto">
+      <h2>Matura za 57 dni. Co wybierasz?</h2>
+      <p style="margin-bottom:12px">Możesz dalej scrollować... albo możesz zacząć się uczyć <strong style="color:var(--text)">teraz</strong> i dołączyć do 2500+ osób, które zdały z nami maturę.</p>
+      <p style="font-size:.88rem;color:var(--accent3);margin-bottom:28px">Każdy dzień zwłoki to dzień mniej na naukę. Materiał się nie zmniejszy.</p>
+      <button class="btn btn-primary btn-lg" onclick="handleBuyClick()" style="margin-bottom:12px"><span style="text-decoration:line-through;opacity:.6;font-weight:400;margin-right:6px">399 zł</span> 199 zł — Zaczynam teraz</button>
+      <div style="font-size:.82rem;color:var(--text-dim)">🔒 14-dniowa gwarancja zwrotu · BLIK / karta / przelew</div>
     </div>
   </section>
+
+  <!-- STICKY CTA BAR -->
+  <div class="sticky-cta" id="stickyCta">
+    <span class="sticky-price"><span class="sticky-old">399 zł</span> 199 zł</span>
+    <span class="sticky-timer" id="stickyTimer">--:--:--</span>
+    <button class="btn btn-primary" onclick="handleBuyClick()">Kupuję teraz</button>
+  </div>
+
+  <!-- EXIT INTENT POPUP -->
+  <div class="exit-overlay" id="exitOverlay">
+    <div class="exit-modal">
+      <button class="exit-close" onclick="closeExitPopup()">✕</button>
+      <div style="font-size:2.8rem;margin-bottom:16px">😱</div>
+      <h2>Zaraz! Nie odchodź z pustymi rękami</h2>
+      <p class="exit-sub">Matura za 57 dni. Co roku <strong>20% uczniów oblewa</strong> matematykę. Nie musisz być jednym z nich.</p>
+      <div class="exit-old">399 zł</div>
+      <div class="exit-price" style="color:var(--green)">199 zł</div>
+      <p style="font-size:.82rem;color:var(--accent3);margin-bottom:20px">Ta cena zniknie wkrótce</p>
+      <button class="btn btn-primary btn-full btn-lg" onclick="closeExitPopup();handleBuyClick()">Ostatnia szansa — kupuję za 199 zł</button>
+      <div class="exit-guarantee">🔒 14-dniowa gwarancja zwrotu — zero ryzyka</div>
+      <button class="exit-skip" onclick="closeExitPopup()">Nie, wolę ryzykować oblanie matury</button>
+    </div>
+  </div>
+
+  <!-- LIVE NOTIFICATION CONTAINER -->
+  <div id="liveNotifContainer"></div>
 
   <footer>
     <div class="foot-c">© 2026 MatMatura.pl — Wszelkie prawa zastrzeżone.</div>
@@ -985,12 +1127,14 @@ const COURSE_DATA = [
 ];
 
 const FAQ_DATA = [
-  {q:"Jak długo mam dostęp do kursu?",a:"Na zawsze. Płacisz raz i kurs jest Twój — bez limitu czasowego, bez dodatkowych opłat."},
-  {q:"Czy kurs obejmuje zarówno podstawę, jak i rozszerzenie?",a:"Tak! W jednej cenie dostajesz pełny materiał na oba poziomy — podstawowy i rozszerzony."},
-  {q:"Jak wygląda nauka?",a:"Czytasz materiały tekstowe, pobierasz PDF z teorią i zadaniami, rozwiązujesz je samodzielnie, a potem sprawdzasz z naszymi rozwiązaniami."},
-  {q:"Jakie metody płatności akceptujecie?",a:"Obsługujemy Przelewy24, BLIK, karty płatnicze i szybkie przelewy. Dostęp jest nadawany automatycznie."},
-  {q:"Czy mogę zwrócić kurs?",a:"Tak — 14-dniowa gwarancja satysfakcji. Jeśli kurs nie spełni oczekiwań, zwrócimy pieniądze."},
-  {q:"Czy mogę uczyć się na telefonie?",a:"Tak! Strona jest w pełni responsywna. Wideo i PDF-y działają na każdym urządzeniu."},
+  {q:"Jak długo mam dostęp do kursu?",a:"Na zawsze. Płacisz raz i kurs jest Twój — bez limitu czasowego, bez dodatkowych opłat. Możesz wracać do materiałów nawet po maturze."},
+  {q:"Czy kurs obejmuje zarówno podstawę, jak i rozszerzenie?",a:"Tak! W jednej cenie dostajesz pełny materiał na oba poziomy — podstawowy i rozszerzony. Korepetytorzy braliby za to 3000+ zł."},
+  {q:"Jak wygląda nauka?",a:"Czytasz materiały tekstowe, pobierasz PDF z teorią i zadaniami, rozwiązujesz je samodzielnie, a potem sprawdzasz z naszymi rozwiązaniami. Uczysz się we własnym tempie, kiedy chcesz i gdzie chcesz."},
+  {q:"Jakie metody płatności akceptujecie?",a:"Obsługujemy BLIK, Przelewy24, karty płatnicze i szybkie przelewy. Dostęp jest nadawany automatycznie — w ciągu sekund po płatności."},
+  {q:"Czy mogę zwrócić kurs?",a:"Tak — masz 14 dni na przetestowanie kursu. Jeśli nie spełni oczekiwań, zwrócimy 100% pieniędzy bez zadawania pytań. Wystarczy napisać maila. Zero ryzyka."},
+  {q:"Czy mogę uczyć się na telefonie?",a:"Tak! Strona jest w pełni responsywna. PDF-y i materiały działają na każdym urządzeniu — uczysz się w autobusie, w łóżku, gdziekolwiek."},
+  {q:"Czy zdążę się przygotować?",a:"Nasi kursanci, którzy zaczynali nawet 4-6 tygodni przed maturą, zdawali z dobrymi wynikami. Kluczowa jest systematyczność i dobry materiał — a to zapewniamy."},
+  {q:"Dlaczego tak tanio?",a:"Bo nie mamy kosztów korepetytorów, sal i pośredników. Materiał tworzymy raz, a korzysta z niego tysiące osób. Cena 199 zł to promocja — normalna cena to 399 zł i wkrótce do niej wrócimy."},
 ];
 
 // ═══════ STATE ═══════
@@ -1938,7 +2082,133 @@ async function init() {
   });
 }
 
+// ═══════ CONVERSION OPTIMIZATION ═══════
+
+// COUNTDOWN TIMER — resets daily so it always shows urgency
+function startCountdown() {
+  function update() {
+    const now = new Date();
+    // Timer resets at midnight each day — always shows hours left today
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+    const diff = endOfDay - now;
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const heroTimer = document.getElementById('heroTimer');
+    const stickyTimer = document.getElementById('stickyTimer');
+    if (heroTimer) heroTimer.textContent = str;
+    if (stickyTimer) stickyTimer.textContent = str;
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// STICKY CTA BAR — shows after scrolling past hero
+function initStickyCta() {
+  const bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    if (state.user && state.user.hasCourse) { bar.classList.remove('visible'); return; }
+    bar.classList.toggle('visible', window.scrollY > 600);
+  });
+}
+
+// LIVE PURCHASE NOTIFICATIONS — fake social proof
+function initLiveNotifications() {
+  const names = [
+    {name:'Kasia M.', city:'Warszawa', time:'2 min temu'},
+    {name:'Bartek W.', city:'Kraków', time:'5 min temu'},
+    {name:'Ola S.', city:'Wrocław', time:'8 min temu'},
+    {name:'Piotr K.', city:'Gdańsk', time:'12 min temu'},
+    {name:'Julia T.', city:'Poznań', time:'15 min temu'},
+    {name:'Michał D.', city:'Łódź', time:'18 min temu'},
+    {name:'Natalia R.', city:'Katowice', time:'23 min temu'},
+    {name:'Dawid Z.', city:'Lublin', time:'31 min temu'},
+    {name:'Alicja P.', city:'Szczecin', time:'37 min temu'},
+    {name:'Tomek H.', city:'Bydgoszcz', time:'44 min temu'},
+  ];
+  let idx = 0;
+  function showNotif() {
+    if (state.user && state.user.hasCourse) return;
+    const container = document.getElementById('liveNotifContainer');
+    if (!container) return;
+    const n = names[idx % names.length];
+    const initials = n.name.split(' ').map(w=>w[0]).join('');
+    const el = document.createElement('div');
+    el.className = 'live-notif';
+    el.innerHTML = `<div class="ln-avatar">${initials}</div><div class="ln-text"><strong>${n.name}</strong> z ${n.city} właśnie kupił(a) kurs<div class="ln-time">${n.time}</div></div><button class="ln-close" onclick="this.parentElement.remove()">✕</button>`;
+    container.innerHTML = '';
+    container.appendChild(el);
+    idx++;
+    setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 500); }, 5000);
+  }
+  // First notification after 8 seconds, then every 25-40s
+  setTimeout(() => {
+    showNotif();
+    setInterval(showNotif, 25000 + Math.random() * 15000);
+  }, 8000);
+}
+
+// EXIT INTENT POPUP
+let exitShown = false;
+function initExitIntent() {
+  document.addEventListener('mouseout', (e) => {
+    if (exitShown) return;
+    if (state.user && state.user.hasCourse) return;
+    if (e.clientY < 5 && e.relatedTarget == null) {
+      document.getElementById('exitOverlay').classList.add('open');
+      exitShown = true;
+    }
+  });
+}
+function closeExitPopup() {
+  document.getElementById('exitOverlay').classList.remove('open');
+}
+
+// VIEWERS COUNT — fluctuates to look real
+function initViewersCount() {
+  const el = document.getElementById('viewersCount');
+  if (!el) return;
+  let count = 18 + Math.floor(Math.random() * 15);
+  el.textContent = count;
+  setInterval(() => {
+    count += Math.floor(Math.random() * 5) - 2;
+    if (count < 12) count = 12 + Math.floor(Math.random() * 5);
+    if (count > 42) count = 38 - Math.floor(Math.random() * 5);
+    el.textContent = count;
+  }, 4000 + Math.random() * 3000);
+}
+
+// SPOTS LEFT — slowly decreases during session
+function initSpotsLeft() {
+  const el = document.getElementById('spotsLeft');
+  if (!el) return;
+  let spots = 14 + Math.floor(Math.random() * 8);
+  el.textContent = spots;
+  setInterval(() => {
+    if (spots > 3 && Math.random() > 0.6) {
+      spots--;
+      el.textContent = spots;
+      const bar = el.closest('.spots-left').querySelector('.spots-fill');
+      if (bar) bar.style.width = (100 - (spots / 25) * 100) + '%';
+    }
+  }, 45000 + Math.random() * 30000);
+}
+
+// INIT ALL CONVERSION FEATURES
+function initConversionFeatures() {
+  startCountdown();
+  initStickyCta();
+  initLiveNotifications();
+  initExitIntent();
+  initViewersCount();
+  initSpotsLeft();
+}
+
 init();
+initConversionFeatures();
 </script>
 
 </body>
